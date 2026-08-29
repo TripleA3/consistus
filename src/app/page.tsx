@@ -1,5 +1,6 @@
+import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
-import { HeroBanner } from "@/components/home/HeroBanner";
+import { HeroBanner } from "@/components/shared/HeroBanner";
 import { CategoryChips } from "@/components/home/CategoryChips";
 import { CelebrityCard } from "@/components/home/CelebrityCard";
 import { EventCard } from "@/components/home/EventCard";
@@ -57,9 +58,9 @@ export default async function HomePage() {
         <section className="flex flex-col gap-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-text">Don&apos;t Miss These Events</h2>
-            <a href="/events" className="text-base font-semibold text-[#3a3a3a] hover:text-ink">
+            <Link href="/events" className="text-base font-semibold text-[#3a3a3a] hover:text-ink">
               See more
-            </a>
+            </Link>
           </div>
           <CategoryChips categories={eventCategories} />
           {events.length === 0 ? (

@@ -10,9 +10,18 @@ export const mockEvents: EventItem[] = [
     category: "tech-and-gaming",
     venue: "Landmark Event Centre",
     city: "Lagos",
+    address: "1-5 Water Corporation Rd, Victoria Island, Lagos",
     startsAt: "2026-09-12T18:00:00.000Z",
     endsAt: "2026-09-12T23:00:00.000Z",
     hostTalentId: "talent-1",
+    organizerName: "Tech Unite Africa",
+    organizerFollowers: 3500,
+    highlights: [
+      "Live esports tournament with regional teams",
+      "Indie demo booths and hands-on stations",
+      "Networking mixer with drinks and small bites",
+      "A relaxed, no-pressure atmosphere for builders",
+    ],
     ticketTiers: [
       {
         id: "tier-1a",
@@ -45,9 +54,18 @@ export const mockEvents: EventItem[] = [
     category: "concerts",
     venue: "The Wheatbaker Lawn",
     city: "Lagos",
+    address: "4 Onitolo (Bank) Rd, Ikoyi, Lagos",
     startsAt: "2026-10-03T19:00:00.000Z",
     endsAt: "2026-10-03T22:00:00.000Z",
     hostTalentId: "talent-2",
+    organizerName: "Amara Divine",
+    organizerFollowers: 542000,
+    highlights: [
+      "Acoustic set with the full live band",
+      "Fan favourites plus two unreleased tracks",
+      "Meet-and-greet for table bookings",
+      "Complimentary welcome drink on arrival",
+    ],
     ticketTiers: [
       {
         id: "tier-2a",
@@ -79,9 +97,18 @@ export const mockEvents: EventItem[] = [
     category: "nightlife",
     venue: "Muri Okunola Park",
     city: "Lagos",
+    address: "Muri Okunola St, Victoria Island, Lagos",
     startsAt: "2026-09-27T20:00:00.000Z",
     endsAt: "2026-09-28T00:00:00.000Z",
     hostTalentId: "talent-3",
+    organizerName: "Kene Obi",
+    organizerFollowers: 89000,
+    highlights: [
+      "Headline stand-up set from Kene Obi",
+      "Two supporting acts",
+      "Late-night food trucks on site",
+      "18+ event, valid ID required",
+    ],
     ticketTiers: [
       {
         id: "tier-3a",
@@ -104,9 +131,18 @@ export const mockEvents: EventItem[] = [
     category: "networking",
     venue: "Rele Gallery",
     city: "Lagos",
+    address: "9 Osborne Rd, Ikoyi, Lagos",
     startsAt: "2026-09-20T11:00:00.000Z",
     endsAt: "2026-09-20T14:00:00.000Z",
     hostTalentId: "talent-4",
+    organizerName: "Zola Marn",
+    organizerFollowers: 210000,
+    highlights: [
+      "Curated brunch menu with vegetarian options",
+      "Structured mixer format — no awkward small talk",
+      "Gallery walkthrough included",
+      "Founders and creatives across sectors",
+    ],
     ticketTiers: [
       {
         id: "tier-4a",

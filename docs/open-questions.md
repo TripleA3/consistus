@@ -34,6 +34,22 @@ No canonical Fannero footer frame was found in the sections reviewed for
 Phase 1. Built to token with plausible columns (see `docs/decisions.md`).
 Confirm against a real footer frame if one exists in a later section.
 
+## Talent Details page has no source frame
+
+No frame named "Talent Details" or similar was found in section `6007:*`
+(the canonical home/event/checkout section). Built a reasonable profile
+page (`src/app/talent/[id]/page.tsx`) instead, reusing the info-card/CTA
+patterns from the Event Details page. Confirm against a real frame if one
+exists elsewhere in the file.
+
+## Search page filters beyond category are UI-only
+
+The "Filter By" sidebar on `/events` (from node `6007:40807`) has Date,
+Price, Location, and Currency accordions. Only Categories is wired to real
+filtering — the mock data has no location/currency facets yet. The other
+sections expand but show "Coming soon." Wire them up once the data model
+supports them.
+
 ## Mobile header/nav
 
 No 390px frame for the header/subpage-nav was reviewed in Phase 1. Adapted

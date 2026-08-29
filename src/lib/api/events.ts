@@ -24,3 +24,8 @@ export async function fetchEventById(
 ): Promise<EventItem | undefined> {
   return getEventById(id);
 }
+
+export async function fetchEventsByTalentId(talentId: string): Promise<EventItem[]> {
+  const events = await getEvents();
+  return events.filter((event) => event.hostTalentId === talentId);
+}

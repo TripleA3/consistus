@@ -54,6 +54,33 @@ Built `Footer.tsx` to the established tokens (navy background, lime
 accents) with plausible link columns. Revisit if a real footer frame
 appears in a later phase/section.
 
+## "Owner / Editor / Viewer" glass badges are Figma UI, not product content
+
+Both the Event Details Page (`6007:40492`) and the Search page (`6007:40807`)
+contain small rotated glass-morphism badges reading "Owner", "Editor", and
+"Viewer" floating over the hero banner. These are Figma's own multiplayer
+cursor/presence indicators, captured accidentally in the export — not part
+of the actual product design. Excluded from the built pages.
+
+## Event Details Page: "Nearby" and photo gallery omitted
+
+The canonical Event Details Page (`6007:40492`) includes a "Nearby"
+section (attractions/shopping/accommodation with ratings and drive times,
+generic map-app content unrelated to Fannero's actual data model) and a
+"Previous Events" photo gallery strip. Both were left out of
+`src/app/events/[id]/page.tsx` to focus effort on the ~7 remaining phases —
+noted here rather than silently dropped. The rest of the page (info card,
+ticket widget, about/what-to-expect, organizer card with follow, contact
+organizer form, more-events grid) was built to spec.
+
+## No dedicated "Talent Details" frame found
+
+The brief lists "talent details" as a Phase 2 deliverable, but no frame
+named anything like "Talent Details" or "Profile" turned up in section
+`6007:*` (checked via metadata grep for "talent"/"profile", zero matches).
+Built a reasonable talent profile page instead — see
+`docs/open-questions.md`.
+
 ## "How It Works" section
 
 Figma frame (under `6007:41251`) is an unbuilt grey placeholder rectangle

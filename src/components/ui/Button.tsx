@@ -1,7 +1,13 @@
 import type { ButtonHTMLAttributes } from "react";
 import Link from "next/link";
 
-export type ButtonVariant = "primary" | "accent" | "outline" | "ghost" | "neutral";
+export type ButtonVariant =
+  | "primary"
+  | "accent"
+  | "outline"
+  | "outline-light"
+  | "ghost"
+  | "neutral";
 export type ButtonSize = "sm" | "md" | "lg";
 
 const base =
@@ -18,6 +24,9 @@ const variantClasses: Record<ButtonVariant, string> = {
   // Outline button used over the dark navy celebrity/event cards.
   outline:
     "bg-transparent border border-primary text-background shadow-button rounded-xl hover:bg-white/10",
+  // Same outline treatment, for use on light surfaces instead of dark cards.
+  "outline-light":
+    "bg-transparent border border-ink/20 text-ink rounded-xl hover:bg-ink/5",
   // Neutral icon button (header actions).
   ghost:
     "bg-[#ededed] border-[3px] border-[#f6f6f6] text-ink rounded-md hover:bg-[#e2e2e2]",

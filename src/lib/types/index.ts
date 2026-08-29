@@ -43,9 +43,13 @@ export interface EventItem {
   category: EventCategory;
   venue: string;
   city: string;
+  address: string;
   startsAt: string;
   endsAt: string;
   hostTalentId: string;
+  organizerName: string;
+  organizerFollowers: number;
+  highlights: string[];
   ticketTiers: TicketTier[];
 }
 
