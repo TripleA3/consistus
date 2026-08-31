@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { TalentCategory, User, UserRole } from "@/lib/types";
+import type { TalentCategory, TalentProfile, User, UserRole } from "@/lib/types";
 import { DEMO_USER } from "@/lib/auth/session";
 
 const STORAGE_KEY = "fannero-auth-user";
@@ -27,6 +27,7 @@ type AuthContextValue = {
   signIn: (email: string) => void;
   signUp: (input: SignUpInput) => void;
   signOut: () => void;
+  updateTalentProfile: (patch: Partial<TalentProfile>) => void;
 };
 
 const AuthReactContext = createContext<AuthContextValue | null>(null);
@@ -105,8 +106,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }
 
+  function updateTalentProfile(patch: Partial<TalentProfile>) {
+    setUser((prev) =>
+      prev?.talentProfile ? { ...prev, talentProfile: { ...prev.talentProfile, ...patch } } : prev,
+    );
+  }
+
   return (
-    <AuthReactContext.Provider value={{ user, status, signIn, signUp, signOut }}>
+    <AuthReactContext.Provider
+      value={{ user, status, signIn, signUp, signOut, updateTalentProfile }}
+    >
       {children}
     </AuthReactContext.Provider>
   );

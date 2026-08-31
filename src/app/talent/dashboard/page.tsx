@@ -31,6 +31,12 @@ const tools: { href: string; label: string; description: string; icon: IconName 
     description: "Requests, payouts, and account activity.",
     icon: "bell",
   },
+  {
+    href: "/talent/analytics",
+    label: "Analytics",
+    description: "Earnings, request volume, and event performance.",
+    icon: "chart",
+  },
 ];
 
 export default function TalentDashboardPage() {

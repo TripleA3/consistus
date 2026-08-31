@@ -77,6 +77,37 @@ appears in a later phase/section.
   screenshot captured before the Figma rate limit hit, plus this app's own
   emerging conventions (see next entry).
 
+## The data-access layer runs as Server Actions, not client-side JS
+
+Every function in `src/lib/api/*.ts` (events, talents, requests,
+notifications, wallet) is called from Client Components as a plain async
+function — `fetchX(...).then(setState)` in a `useEffect`, `await mutateX(...)`
+in a click handler. Without a server boundary, none of that code is special:
+Next.js bundles it straight into client JS, so the "mock database" arrays in
+`src/lib/mock/*.ts` would live per-browser-tab, in memory, reset on every
+hard navigation or reload — not because the mock is intentionally
+ephemeral, but as an accident of how the calls were wired.
+
+Caught concretely while testing Phase 7: verifying a talent
+(`updateTalentDirectoryProfile`) appeared to work on-screen, but the badge
+was gone the moment `/talent/[id]` was loaded via a fresh navigation rather
+than an in-app link. The same class of bug affected every mutation added
+since Phase 5 — submitted requests, created events, withdrawals, PINs —
+they only ever "stuck" for the lifetime of one continuous client-side
+session, not across a real page load.
+
+**Fix:** added `"use server"` to the top of each file in `src/lib/api/`,
+turning every export into a React Server Function. The call sites did not
+change — that's the entire point of Server Actions — but now the mock
+arrays live in the Node process the dev/prod server runs in, so state
+survives navigation and reload the way a real backend's would (still reset
+on server restart, and still in-memory only, which is the honest limit of
+"mock the backend" without a database). `src/lib/payments/*`,
+`src/lib/pricing.ts`, and `src/lib/checkout/CheckoutContext.tsx` were left
+alone: checkout state is deliberately a per-tab, per-order session (already
+persisted to `sessionStorage` on purpose), not shared backend state, so it
+doesn't belong in this layer.
+
 ## Demo account's id now matches its talent-directory entry
 
 The seed account (`DEMO_USER`) originally had its own id (`user-me`) while

@@ -34,6 +34,14 @@ No canonical Fannero footer frame was found in the sections reviewed for
 Phase 1. Built to token with plausible columns (see `docs/decisions.md`).
 Confirm against a real footer frame if one exists in a later section.
 
+## Withdrawal PIN is stored and checked in plaintext
+
+`src/lib/mock/wallet.ts` keeps PINs in a plain in-memory map and compares
+them with `===`. Fine for demonstrating the set/enter PIN flow against a
+mock backend, not fine for anything real — a genuine implementation needs
+hashing (bcrypt/argon2) and never transmitting or storing the raw PIN
+beyond what confirmation requires.
+
 ## "Simulate fan confirmation" is a stand-in for real fan-side confirmation
 
 The request detail page's `delivered` state has a "Simulate fan

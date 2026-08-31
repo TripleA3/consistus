@@ -27,7 +27,8 @@ export type IconName =
   | "arrow-left"
   | "credit-card"
   | "shield"
-  | "download";
+  | "download"
+  | "chart";
 
 type IconProps = SVGProps<SVGSVGElement> & {
   name: IconName;
@@ -178,6 +179,14 @@ const paths: Record<IconName, React.ReactNode> = {
       <path d="M12 4v11" />
       <path d="m7 11 5 5 5-5" />
       <path d="M5 20h14" />
+    </>
+  ),
+  chart: (
+    <>
+      <path d="M4 20V10" />
+      <path d="M12 20V4" />
+      <path d="M20 20v-7" />
+      <path d="M3 20h18" />
     </>
   ),
 };

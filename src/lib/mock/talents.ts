@@ -27,7 +27,7 @@ export const mockTalentUsers: User[] = [
       userId: "talent-2",
       category: "artist",
       bio: "Afrobeats vocalist and songwriter. Available for shoutouts, duets and live appearances.",
-      verified: true,
+      verified: false,
       ratePerVideo: 60000,
       ratePerAppearance: 400000,
       followerCount: 542000,
@@ -75,4 +75,14 @@ export function getTalentProfiles(): TalentProfile[] {
 
 export function getTalentUserById(id: string): User | undefined {
   return mockTalentUsers.find((u) => u.id === id);
+}
+
+export function updateTalentProfileById(
+  talentId: string,
+  patch: Partial<TalentProfile>,
+): TalentProfile | undefined {
+  const user = mockTalentUsers.find((u) => u.id === talentId);
+  if (!user?.talentProfile) return undefined;
+  Object.assign(user.talentProfile, patch);
+  return user.talentProfile;
 }

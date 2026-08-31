@@ -1,7 +1,10 @@
+"use server";
+
 import {
   getTalentProfiles,
   getTalentUserById,
   mockTalentUsers,
+  updateTalentProfileById,
 } from "@/lib/mock/talents";
 import type { TalentProfile, User } from "@/lib/types";
 
@@ -21,4 +24,11 @@ export async function fetchTalentUserById(
   id: string,
 ): Promise<User | undefined> {
   return getTalentUserById(id);
+}
+
+export async function updateTalentDirectoryProfile(
+  talentId: string,
+  patch: Partial<TalentProfile>,
+): Promise<TalentProfile | undefined> {
+  return updateTalentProfileById(talentId, patch);
 }
