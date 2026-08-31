@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/Icon";
 import { ButtonLink } from "@/components/ui/Button";
 import { useAuth } from "@/lib/auth/AuthContext";
 
 export function HeaderAuthActions() {
   const { user, status } = useAuth();
+  const pathname = usePathname();
 
   if (status === "loading") {
     return <div className="h-10 w-24" aria-hidden="true" />;
@@ -15,12 +17,16 @@ export function HeaderAuthActions() {
   if (!user) {
     return (
       <div className="flex items-center gap-2">
-        <ButtonLink href="/sign-in" variant="neutral" size="sm">
-          Sign in
-        </ButtonLink>
-        <ButtonLink href="/sign-up" variant="primary" size="sm">
-          Sign up
-        </ButtonLink>
+        {pathname !== "/sign-in" ? (
+          <ButtonLink href="/sign-in" variant="neutral" size="sm">
+            Sign in
+          </ButtonLink>
+        ) : null}
+        {pathname !== "/sign-up" ? (
+          <ButtonLink href="/sign-up" variant="primary" size="sm">
+            Sign up
+          </ButtonLink>
+        ) : null}
       </div>
     );
   }

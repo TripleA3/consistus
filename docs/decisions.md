@@ -77,6 +77,20 @@ appears in a later phase/section.
   screenshot captured before the Figma rate limit hit, plus this app's own
   emerging conventions (see next entry).
 
+## Phase 5 request flow — one page per type, price fixed vs. negotiable
+
+All four request types (personalised video, guest speaker, special
+appearance, event invitation) share one dynamic route
+(`/talent/[id]/request/[type]`) and form component, configured per type,
+rather than four near-duplicate pages — no Figma reference existed to
+justify keeping them separate. Video requests use the talent's fixed
+`ratePerVideo` (a shoutout is a flat-rate product); the other three let the
+fan propose an amount seeded from `ratePerAppearance`, since booking
+someone's time for an event is inherently negotiable. Guest speaker and
+event invitation are secondary CTAs on the talent profile (video and
+special appearance get the primary buttons) — an ordering call, not
+something read off a frame.
+
 ## Figma MCP hit its Starter-plan rate limit partway through Phase 3
 
 After Phase 2, the Figma MCP connection started returning "You've reached
