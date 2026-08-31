@@ -2,26 +2,34 @@
 
 import { useRef } from "react";
 
-const LENGTH = 4;
+const DEFAULT_LENGTH = 4;
 
-type PinInputProps = {
+type CodeInputProps = {
   value: string;
   onChange: (value: string) => void;
   label?: string;
   autoFocus?: boolean;
+  length?: number;
 };
 
-export function PinInput({ value, onChange, label, autoFocus }: PinInputProps) {
+/** Boxed numeric-code entry — used for wallet PINs and email/phone verification codes. */
+export function CodeInput({
+  value,
+  onChange,
+  label,
+  autoFocus,
+  length = DEFAULT_LENGTH,
+}: CodeInputProps) {
   const refs = useRef<(HTMLInputElement | null)[]>([]);
-  const digits = value.padEnd(LENGTH, " ").split("").slice(0, LENGTH);
+  const digits = value.padEnd(length, " ").split("").slice(0, length);
 
   function setDigit(index: number, digit: string) {
     const clean = digit.replace(/\D/g, "").slice(-1);
     const next = value.split("");
     next[index] = clean;
-    const joined = next.join("").slice(0, LENGTH);
+    const joined = next.join("").slice(0, length);
     onChange(joined);
-    if (clean && index < LENGTH - 1) {
+    if (clean && index < length - 1) {
       refs.current[index + 1]?.focus();
     }
   }
@@ -57,5 +65,3 @@ export function PinInput({ value, onChange, label, autoFocus }: PinInputProps) {
     </div>
   );
 }
-
-export const PIN_LENGTH = LENGTH;

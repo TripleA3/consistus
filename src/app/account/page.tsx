@@ -24,6 +24,14 @@ function AccountView() {
   return (
     <AppShell>
       <div className="mx-auto flex max-w-lg flex-col gap-6 px-4 py-16 sm:px-8">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-text">Profile</h1>
+          <ButtonLink href="/account/settings" variant="neutral" size="sm" className="gap-2">
+            <Icon name="settings" className="size-4" />
+            Settings
+          </ButtonLink>
+        </div>
+
         <div className="flex items-center gap-4 rounded-2xl border border-card-border bg-white p-6">
           <span className="flex size-14 items-center justify-center rounded-full bg-lime-100 text-lime-500">
             <Icon name="user" className="size-7" />
@@ -49,6 +57,11 @@ function AccountView() {
             View my talent profile
           </ButtonLink>
         ) : null}
+
+        <ButtonLink href="/help" variant="neutral" className="justify-center gap-2">
+          <Icon name="alert-circle" className="size-4" />
+          Help Center
+        </ButtonLink>
 
         <Button
           variant="neutral"

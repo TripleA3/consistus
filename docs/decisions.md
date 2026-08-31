@@ -120,6 +120,29 @@ Caught while wiring up Phase 6's request inbox. Fixed by making
 copying fields — same id, so requests, notifications, and events all
 resolve to the one signed-in account instead of two disconnected records.
 
+## Phase 8 ("Other Pages") built from metadata + one thumbnail, not full design context
+
+Figma access came back mid-session (rate limit reset) and stayed up for
+exactly two calls: one overview `get_screenshot` and one `get_metadata` on
+section `3979:34387`, which is literally named "Other Pages" and contains
+five real screens — Profile, Settings, a change-password flow, a
+change-email flow, and Help Center - Categories. The very next
+`get_design_context` call hit the limit again.
+
+That's meaningfully more than Phases 3–7 had (exact frame names, every
+title's copy verbatim, precise dimensions, a low-res layout thumbnail),
+so this wasn't the same "genuinely unknown, must inspect first" situation
+noted earlier when the section was still unopened. Built from that
+information plus the established design system, the same posture as
+Phases 3–7, and logged the gap in docs/open-questions.md rather than
+presenting it as pixel-verified. Password/email change share one component
+(`SecurityChangeFlow`) since the "Make Changes" gate frame is duplicated
+verbatim for both flows in the file — strong evidence they're the same
+shape, not just an assumption. Generalized the wallet's 4-digit PIN input
+into a reusable `CodeInput` (moved from `components/wallet/` to
+`components/ui/`) to drive both the withdrawal PIN and these flows' 6-digit
+verification codes.
+
 ## Phase 5 request flow — one page per type, price fixed vs. negotiable
 
 All four request types (personalised video, guest speaker, special

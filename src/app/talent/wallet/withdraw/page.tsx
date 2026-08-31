@@ -6,7 +6,7 @@ import { RequireAuth } from "@/components/auth/RequireAuth";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Icon } from "@/components/ui/Icon";
-import { PinInput, PIN_LENGTH } from "@/components/wallet/PinInput";
+import { CodeInput } from "@/components/ui/CodeInput";
 import { useAuth } from "@/lib/auth/AuthContext";
 import {
   checkHasPin,
@@ -19,6 +19,7 @@ import {
 import type { WalletSummary, WithdrawalMethod } from "@/lib/types";
 
 type Step = "amount" | "method" | "set-pin" | "enter-pin" | "success";
+const PIN_LENGTH = 4;
 
 const currencyFormatter = (currency: string) =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency, maximumFractionDigits: 0 });
@@ -173,8 +174,8 @@ function WithdrawFlow() {
             <p className="text-center text-sm text-slate-500">
               You&apos;ll use this PIN to confirm withdrawals going forward.
             </p>
-            <PinInput label="New PIN" value={pinDraft} onChange={setPinDraft} autoFocus />
-            <PinInput label="Confirm PIN" value={pinConfirm} onChange={setPinConfirm} />
+            <CodeInput label="New PIN" value={pinDraft} onChange={setPinDraft} autoFocus />
+            <CodeInput label="Confirm PIN" value={pinConfirm} onChange={setPinConfirm} />
             {pinError ? <p className="text-sm text-danger">{pinError}</p> : null}
             <Button variant="accent" onClick={handleSetPin}>
               Set PIN and withdraw
@@ -185,7 +186,7 @@ function WithdrawFlow() {
         {step === "enter-pin" ? (
           <div className="flex flex-col items-center gap-5 rounded-2xl border border-card-border bg-white p-6">
             <h1 className="text-xl font-semibold text-text">Enter your PIN</h1>
-            <PinInput value={pinDraft} onChange={setPinDraft} autoFocus />
+            <CodeInput value={pinDraft} onChange={setPinDraft} autoFocus />
             {pinError ? <p className="text-sm text-danger">{pinError}</p> : null}
             <Button variant="accent" onClick={handleEnterPin}>
               Confirm withdrawal

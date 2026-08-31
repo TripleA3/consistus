@@ -69,19 +69,26 @@ Header/Footer link to a few pages outside the brief's 8-phase build order —
 `/community`, `/about`, `/terms`, `/privacy`, `/tickets` (a fan's own
 ticket list), `/favorites`. These aren't built and will 404 until scoped.
 
-## Phase 8 ("Other pages") is blocked, not just unverified
+## Phase 8 identified but not pixel-verified
 
-Every other phase had enough established context (tokens, primitives,
-domain model, one real screenshot for Phase 3) to build from sound
-judgment while Figma access was rate-limited. Phase 8 is different: the
-brief itself says these frames (section `3979:34387`, "Desktop 110-120")
-are unlabeled and must be *inspected and identified* before building
-anything — that's not something judgment can substitute for, since the
-content is genuinely unknown rather than inferrable from what's already
-built. Left unbuilt rather than inventing generic pages that may not
-correspond to anything in the actual design. Needs a Figma
-`get_metadata`/`get_screenshot` pass on that section once MCP access is
-available again.
+Once Figma access came back, `get_metadata` + one overview `get_screenshot`
+identified section `3979:34387` before the rate limit hit again: Profile,
+Settings, two parallel 4-step security flows (change password / change
+email — each: confirm current password → new value → verify code →
+confirmation), and Help Center - Categories. That's real information, not
+a guess — frame names, exact copy for every title, and a low-res thumbnail
+of the layout. But no `get_design_context` call succeeded, so exact
+spacing/type/colors for these five screens are built to the established
+Fannero design system, not pixel-matched. Re-verify against the real
+frames (Desktop 110, 111, 112/114/117-119, 120) once quota allows.
+
+Also unverified: I inferred both security flows share one shape from the
+"Make Changes" gate screen appearing twice with identical text, and from
+Change Password (Desktop 119) — I did not fetch Change Email's own frame
+(Desktop 114), Verify New Email (115), or the two confirmation screens
+(116, 118) individually. Reasonable given the gate screen's duplicate
+title all but confirms one shared flow, but flagged rather than presented
+as verified.
 
 ## Phase 3 onward not pixel-verified against Figma (rate limit)
 

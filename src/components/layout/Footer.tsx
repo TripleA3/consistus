@@ -28,6 +28,7 @@ const columns: { title: string; links: { href: string; label: string }[] }[] = [
   {
     title: "Legal",
     links: [
+      { href: "/help", label: "Help Center" },
       { href: "/terms", label: "Terms of service" },
       { href: "/privacy", label: "Privacy policy" },
     ],
