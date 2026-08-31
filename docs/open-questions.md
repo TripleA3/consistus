@@ -69,6 +69,20 @@ Header/Footer link to a few pages outside the brief's 8-phase build order —
 `/community`, `/about`, `/terms`, `/privacy`, `/tickets` (a fan's own
 ticket list), `/favorites`. These aren't built and will 404 until scoped.
 
+## Phase 8 ("Other pages") is blocked, not just unverified
+
+Every other phase had enough established context (tokens, primitives,
+domain model, one real screenshot for Phase 3) to build from sound
+judgment while Figma access was rate-limited. Phase 8 is different: the
+brief itself says these frames (section `3979:34387`, "Desktop 110-120")
+are unlabeled and must be *inspected and identified* before building
+anything — that's not something judgment can substitute for, since the
+content is genuinely unknown rather than inferrable from what's already
+built. Left unbuilt rather than inventing generic pages that may not
+correspond to anything in the actual design. Needs a Figma
+`get_metadata`/`get_screenshot` pass on that section once MCP access is
+available again.
+
 ## Phase 3 onward not pixel-verified against Figma (rate limit)
 
 The Figma MCP connection hit its Starter-plan tool-call limit after Phase 2
