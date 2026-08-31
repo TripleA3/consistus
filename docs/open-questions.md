@@ -34,6 +34,17 @@ No canonical Fannero footer frame was found in the sections reviewed for
 Phase 1. Built to token with plausible columns (see `docs/decisions.md`).
 Confirm against a real footer frame if one exists in a later section.
 
+## Phase 3 onward not pixel-verified against Figma (rate limit)
+
+The Figma MCP connection hit its Starter-plan tool-call limit after Phase 2
+(see `docs/decisions.md`). Only the Select Ticket screen (`6007:41494`) was
+seen, as a screenshot. Checkout, Payment Review, Bank Transfer (all states),
+Credit Card, and Receipt are built to the established design system and
+sound product judgment, not verified against their actual Figma frames.
+**Re-check every screen from Phase 3 onward against the real file once the
+Figma plan/quota allows it** — treat this whole section as provisional
+until then.
+
 ## Talent Details page has no source frame
 
 No frame named "Talent Details" or similar was found in section `6007:*`

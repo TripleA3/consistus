@@ -19,7 +19,15 @@ export type IconName =
   | "play"
   | "video"
   | "wallet"
-  | "user";
+  | "user"
+  | "minus"
+  | "plus"
+  | "copy"
+  | "alert-circle"
+  | "arrow-left"
+  | "credit-card"
+  | "shield"
+  | "download";
 
 type IconProps = SVGProps<SVGSVGElement> & {
   name: IconName;
@@ -130,6 +138,46 @@ const paths: Record<IconName, React.ReactNode> = {
     <>
       <circle cx="12" cy="8" r="3.5" />
       <path d="M4.5 20a7.5 7.5 0 0 1 15 0" />
+    </>
+  ),
+  minus: <path d="M5 12h14" />,
+  plus: (
+    <>
+      <path d="M12 5v14" />
+      <path d="M5 12h14" />
+    </>
+  ),
+  copy: (
+    <>
+      <rect x="9" y="9" width="12" height="12" rx="2" />
+      <path d="M5 15V5a2 2 0 0 1 2-2h10" />
+    </>
+  ),
+  "alert-circle": (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 8v5" />
+      <circle cx="12" cy="16" r="0.5" fill="currentColor" stroke="none" />
+    </>
+  ),
+  "arrow-left": (
+    <>
+      <path d="M19 12H5" />
+      <path d="m11 18-6-6 6-6" />
+    </>
+  ),
+  "credit-card": (
+    <>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="M3 10h18" />
+    </>
+  ),
+  shield: <path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6z" />,
+  download: (
+    <>
+      <path d="M12 4v11" />
+      <path d="m7 11 5 5 5-5" />
+      <path d="M5 20h14" />
     </>
   ),
 };

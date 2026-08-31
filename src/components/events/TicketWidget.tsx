@@ -36,7 +36,7 @@ export function TicketWidget({ event }: TicketWidgetProps) {
             : `${currencyFormatter(currency).format(min)}-${currencyFormatter(currency).format(max)}`}
         </p>
         <ButtonLink
-          href={`/events/${event.id}/tickets`}
+          href={`/events/${event.id}/checkout/tickets`}
           variant="accent"
           size="md"
           className="w-full justify-center rounded-full"

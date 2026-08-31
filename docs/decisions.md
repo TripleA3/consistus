@@ -54,6 +54,47 @@ Built `Footer.tsx` to the established tokens (navy background, lime
 accents) with plausible link columns. Revisit if a real footer frame
 appears in a later phase/section.
 
+## Checkout state, payment simulation, and dropped sections
+
+- **Checkout state** (selected tickets, buyer details, payment method) lives
+  in a React context scoped to `/events/[id]/checkout/*`, persisted to
+  `sessionStorage` per event so a reload or direct link mid-flow doesn't
+  silently drop the cart. It does not survive closing the tab, and there's
+  no server-side cart — matches "mock the backend" for now.
+- **`FakePaymentProvider`** resolves deterministically rather than randomly:
+  a reference ending in `-fail` (append `?simulate=fail` to a `/pay/*` URL)
+  always fails, everything else succeeds after a short simulated delay.
+  This makes the failure/retry states reachable on demand instead of only
+  by chance — useful for review and for future tests.
+- The bank-transfer "confirm" flow is a single async function triggered by
+  the button click, not a `useEffect` reacting to the status it itself
+  updates — an earlier version used the latter and had a real bug: the
+  effect's own `setStatus` call changed its dependency array, so React
+  tore down and re-ran the effect mid-flight, and the stale closure's
+  `cancelled` flag silently swallowed the final success/failure update.
+  Caught via an actual browser run of the flow, not just the build.
+- Select Ticket / Checkout / Payment Review / Receipt: built from the one
+  screenshot captured before the Figma rate limit hit, plus this app's own
+  emerging conventions (see next entry).
+
+## Figma MCP hit its Starter-plan rate limit partway through Phase 3
+
+After Phase 2, the Figma MCP connection started returning "You've reached
+the Figma MCP tool call limit on the Starter plan" for every call —
+`get_design_context`, `get_screenshot`, and `get_metadata` alike. One
+screenshot of the Select Ticket screen (`6007:41494`) was captured before
+the limit hit; nothing else in Phase 3 onward could be pixel-verified
+against Figma at build time.
+
+**Decision (user-approved):** keep building rather than stall. The
+ticketing/checkout flow (Phase 3) and everything after it is built from
+that one reference screenshot, the design tokens and primitives already
+extracted from real frames in Phases 1–2, and ordinary product/UX judgment
+for anything not directly observed — not from guessed Figma specifics.
+Flagged per screen in `docs/open-questions.md` rather than presented as
+pixel-matched. Re-verify against the real frames once the Figma plan/quota
+allows more MCP calls.
+
 ## "Owner / Editor / Viewer" glass badges are Figma UI, not product content
 
 Both the Event Details Page (`6007:40492`) and the Search page (`6007:40807`)
