@@ -34,6 +34,22 @@ No canonical Fannero footer frame was found in the sections reviewed for
 Phase 1. Built to token with plausible columns (see `docs/decisions.md`).
 Confirm against a real footer frame if one exists in a later section.
 
+## Sign-up doesn't add the new talent to the mock directory
+
+`AuthContext.signUp` mints a new `User` client-side and stores it in
+`localStorage`, but `src/lib/mock/talents.ts` is a static array — a
+newly-signed-up talent isn't added to it. Their own profile link
+(`/talent/[id]`) and dashboard work (both read straight from the auth
+context), but they won't show up in Home's "Top Celebrities" or the
+search/browse listings, and a fresh browser profile won't remember them
+either. Fine for a stubbed backend; wire it up once there's a real one.
+
+## Ancillary marketing links are placeholders
+
+Header/Footer link to a few pages outside the brief's 8-phase build order —
+`/community`, `/about`, `/terms`, `/privacy`, `/tickets` (a fan's own
+ticket list), `/favorites`. These aren't built and will 404 until scoped.
+
 ## Phase 3 onward not pixel-verified against Figma (rate limit)
 
 The Figma MCP connection hit its Starter-plan tool-call limit after Phase 2

@@ -2,12 +2,12 @@ import type { User } from "@/lib/types";
 import { mockTalentUsers } from "@/lib/mock/talents";
 
 /**
- * Stubbed session. There is one seed account that holds both the fan and
- * talent role, mirroring the brief's approved auth default. Replace with a
- * real provider (NextAuth, Clerk, etc.) without touching call sites — every
- * consumer goes through `getCurrentUser` / `hasRole`.
+ * The one seed account the brief calls for — a user who can sign in and
+ * already holds both roles, so the fan and talent experiences are both
+ * reachable without a real backend. `AuthContext` is the client-side layer
+ * that actually tracks who's "signed in" for this stubbed session.
  */
-const currentUser: User = {
+export const DEMO_USER: User = {
   id: "user-me",
   name: "Ada Eze",
   email: "ada@example.com",
@@ -15,10 +15,6 @@ const currentUser: User = {
   talentProfile: mockTalentUsers[0].talentProfile,
 };
 
-export async function getCurrentUser(): Promise<User> {
-  return currentUser;
-}
-
-export function hasRole(user: User, role: User["roles"][number]): boolean {
-  return user.roles.includes(role);
+export function hasRole(user: User | null, role: User["roles"][number]): boolean {
+  return user?.roles.includes(role) ?? false;
 }

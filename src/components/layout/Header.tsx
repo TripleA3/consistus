@@ -2,10 +2,11 @@ import Link from "next/link";
 import { ChipLink } from "@/components/ui/Chip";
 import { Icon } from "@/components/ui/Icon";
 import type { IconName } from "@/components/ui/Icon";
+import { HeaderAuthActions } from "@/components/layout/HeaderAuthActions";
 
 const primaryNav = [
   { href: "/", label: "fans" },
-  { href: "/talent/join", label: "Join as talent" },
+  { href: "/sign-up", label: "Join as talent" },
   { href: "/community", label: "Community" },
 ];
 
@@ -49,37 +50,7 @@ export function Header({ activePath = "/" }: HeaderProps) {
           </nav>
         </div>
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            aria-label="Messages"
-            className="hidden size-10 items-center justify-center rounded-md border-[3px] border-[#f6f6f6] bg-[#ededed] text-ink sm:inline-flex"
-          >
-            <Icon name="mail" className="size-5" />
-          </button>
-          <button
-            type="button"
-            aria-label="Notifications"
-            className="relative hidden size-10 items-center justify-center rounded-md border-[3px] border-[#f6f6f6] bg-[#ededed] text-ink sm:inline-flex"
-          >
-            <Icon name="bell" className="size-5" />
-            <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full border border-lime-100 bg-lime-200 text-[10px] font-black text-ink">
-              4
-            </span>
-          </button>
-          <Link
-            href="/profile"
-            aria-label="Your profile"
-            className="flex size-10 items-center justify-center rounded-full bg-[#ededed] text-ink"
-          >
-            <Icon name="user" className="size-5" />
-          </Link>
-          <button
-            type="button"
-            aria-label="Settings"
-            className="hidden size-10 items-center justify-center rounded-md border-[3px] border-[#f6f6f6] bg-[#ededed] text-ink sm:inline-flex"
-          >
-            <Icon name="settings" className="size-5" />
-          </button>
+          <HeaderAuthActions />
         </div>
       </div>
       <div className="hidden border-t border-border md:block">

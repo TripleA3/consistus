@@ -1,0 +1,63 @@
+"use client";
+
+import Link from "next/link";
+import { Icon } from "@/components/ui/Icon";
+import { ButtonLink } from "@/components/ui/Button";
+import { useAuth } from "@/lib/auth/AuthContext";
+
+export function HeaderAuthActions() {
+  const { user, status } = useAuth();
+
+  if (status === "loading") {
+    return <div className="h-10 w-24" aria-hidden="true" />;
+  }
+
+  if (!user) {
+    return (
+      <div className="flex items-center gap-2">
+        <ButtonLink href="/sign-in" variant="neutral" size="sm">
+          Sign in
+        </ButtonLink>
+        <ButtonLink href="/sign-up" variant="primary" size="sm">
+          Sign up
+        </ButtonLink>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <button
+        type="button"
+        aria-label="Messages"
+        className="hidden size-10 items-center justify-center rounded-md border-[3px] border-[#f6f6f6] bg-[#ededed] text-ink sm:inline-flex"
+      >
+        <Icon name="mail" className="size-5" />
+      </button>
+      <button
+        type="button"
+        aria-label="Notifications"
+        className="relative hidden size-10 items-center justify-center rounded-md border-[3px] border-[#f6f6f6] bg-[#ededed] text-ink sm:inline-flex"
+      >
+        <Icon name="bell" className="size-5" />
+        <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full border border-lime-100 bg-lime-200 text-[10px] font-black text-ink">
+          4
+        </span>
+      </button>
+      <Link
+        href="/account"
+        aria-label="Your account"
+        className="flex size-10 items-center justify-center rounded-full bg-[#ededed] text-ink"
+      >
+        <Icon name="user" className="size-5" />
+      </Link>
+      <button
+        type="button"
+        aria-label="Settings"
+        className="hidden size-10 items-center justify-center rounded-md border-[3px] border-[#f6f6f6] bg-[#ededed] text-ink sm:inline-flex"
+      >
+        <Icon name="settings" className="size-5" />
+      </button>
+    </>
+  );
+}
