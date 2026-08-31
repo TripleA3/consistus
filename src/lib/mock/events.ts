@@ -170,3 +170,12 @@ export function getEventsByCategory(category: string): EventItem[] {
   if (category === "all") return mockEvents;
   return mockEvents.filter((e) => e.category === category);
 }
+
+export function getEventsByHostId(hostTalentId: string): EventItem[] {
+  return mockEvents.filter((e) => e.hostTalentId === hostTalentId);
+}
+
+export function addEvent(event: EventItem): EventItem {
+  mockEvents.unshift(event);
+  return event;
+}

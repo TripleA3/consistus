@@ -77,6 +77,18 @@ appears in a later phase/section.
   screenshot captured before the Figma rate limit hit, plus this app's own
   emerging conventions (see next entry).
 
+## Demo account's id now matches its talent-directory entry
+
+The seed account (`DEMO_USER`) originally had its own id (`user-me`) while
+borrowing a talent profile's *content* from the mock directory — so a
+request a fan sent to that talent (found via `/talent/talent-2`, id
+`talent-2`) would never show up in the signed-in demo account's own
+inbox (`fetchRequestsByTalentId(user.id)` with `user.id === "user-me"`).
+Caught while wiring up Phase 6's request inbox. Fixed by making
+`DEMO_USER` spread `mockTalentUsers[1]` (Amara Divine) directly rather than
+copying fields — same id, so requests, notifications, and events all
+resolve to the one signed-in account instead of two disconnected records.
+
 ## Phase 5 request flow — one page per type, price fixed vs. negotiable
 
 All four request types (personalised video, guest speaker, special

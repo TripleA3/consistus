@@ -58,9 +58,10 @@ export async function submitRequest(input: CreateRequestInput): Promise<TalentRe
 export async function applyRequestEvent(
   id: string,
   event: RequestEvent,
+  extra?: Partial<Pick<TalentRequest, "termsAcceptedAt" | "deliveryUrl">>,
 ): Promise<TalentRequest | undefined> {
   const request = getRequestById(id);
   if (!request) return undefined;
   const status = transitionRequest(request.status, event);
-  return updateRequest(id, { status });
+  return updateRequest(id, { status, ...extra });
 }

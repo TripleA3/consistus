@@ -25,6 +25,12 @@ const tools: { href: string; label: string; description: string; icon: IconName 
     description: "Track earnings and withdraw to your bank.",
     icon: "wallet",
   },
+  {
+    href: "/talent/notifications",
+    label: "Notifications",
+    description: "Requests, payouts, and account activity.",
+    icon: "bell",
+  },
 ];
 
 export default function TalentDashboardPage() {
@@ -46,7 +52,7 @@ function DashboardView() {
           <h1 className="text-2xl font-bold text-text">Welcome back, {user.name.split(" ")[0]}</h1>
           <p className="mt-1 text-sm text-slate-500">Manage your Fannero talent presence.</p>
         </div>
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {tools.map((tool) => (
             <div key={tool.href} className="flex flex-col gap-3 rounded-xl border border-card-border bg-white p-5">
               <span className="flex size-10 items-center justify-center rounded-full bg-lime-100 text-lime-500">

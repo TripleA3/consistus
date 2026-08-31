@@ -10,7 +10,7 @@ const requests: TalentRequest[] = [
     id: "request-seed-1",
     type: "personalised-video",
     fanId: "fan-seed-1",
-    talentId: "talent-3",
+    talentId: "talent-2",
     message: "Happy 30th birthday shoutout for my sister, Tolu!",
     occasion: "Birthday",
     recipientName: "Tolu",

@@ -34,6 +34,17 @@ No canonical Fannero footer frame was found in the sections reviewed for
 Phase 1. Built to token with plausible columns (see `docs/decisions.md`).
 Confirm against a real footer frame if one exists in a later section.
 
+## "Simulate fan confirmation" is a stand-in for real fan-side confirmation
+
+The request detail page's `delivered` state has a "Simulate fan
+confirmation" button that moves the request straight to `completed`. There
+is no real fan-facing "confirm you received this" screen yet — building
+one wasn't in the Phase 5 scope (fan-side submission, amount,
+confirmation-of-request-sent), and Phase 6 needed the full state machine
+reachable to build accept/decline/terms/deliver against. Add a real
+confirmation UI on the fan's side (e.g. under a "my requests" page) when
+that's in scope, and remove this button.
+
 ## Sign-up doesn't add the new talent to the mock directory
 
 `AuthContext.signUp` mints a new `User` client-side and stores it in
