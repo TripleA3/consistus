@@ -63,8 +63,9 @@ talent shows up everywhere the listings query.
 ## Ancillary marketing links are placeholders
 
 Header/Footer link to a few pages outside the brief's 8-phase build order —
-`/community`, `/about`, `/terms`, `/privacy`, `/tickets` (a fan's own
-ticket list), `/favorites`. These aren't built and will 404 until scoped.
+`/community`, `/about`, `/terms`, `/privacy`, `/favorites`. These aren't
+built and will 404 until scoped. (`/tickets` was in this list and is now
+built.)
 
 ## Phase 8 identified but not pixel-verified
 
@@ -127,8 +128,8 @@ last ticket both succeed. Fine for a demo; a real launch needs reserved
 inventory (a hold at cart time, released on abandonment) or at minimum a
 constraint plus a retry on conflict.
 
-## No "my tickets" screen
+## No "my tickets" screen — resolved
 
-Orders are recorded and can be fetched by reference, but nothing surfaces a
-buyer's past purchases. The footer already links to "My tickets", which has
-no page behind it.
+`/tickets` now lists a buyer's orders (event, tiers, reference, total,
+past/upcoming), matching on both the account and the email so tickets
+bought as a guest appear once someone signs in with that address.

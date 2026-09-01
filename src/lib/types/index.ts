@@ -126,6 +126,18 @@ export interface TalentRequest {
   termsAcceptedAt?: string;
 }
 
+/** An order plus just enough of its event to render a ticket without a second fetch. */
+export interface TicketOrderWithEvent extends TicketOrder {
+  event: {
+    id: string;
+    title: string;
+    venue: string;
+    city: string;
+    startsAt: string;
+    coverImage: string;
+  };
+}
+
 export type PaymentMethodType = "bank-transfer" | "card";
 
 export interface PaymentIntentResult {
