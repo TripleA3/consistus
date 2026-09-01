@@ -244,3 +244,30 @@ decisions worth flagging:
   1 sample request, notifications, wallet history) against a fresh
   database via `npm run db:seed`, so a new environment isn't empty. It
   no-ops if `users` already has rows, so it's safe to run more than once.
+
+## Deployments migrate and seed themselves
+
+`npm run build` now runs `scripts/migrate.ts` (applies `drizzle/*.sql`) and
+`scripts/seed.ts` before `next build`, so a deployment carries its own
+schema instead of depending on someone having run SQL by hand against the
+right database. This came out of a long deployment session where the app
+kept failing with `relation "users" does not exist` / `relation "events"
+does not exist`: the schema had been applied through a database console,
+but not always to the same database the deployment actually connected to
+(Vercel's Neon integration can create a separate database branch per
+deployment). Making the build own its schema removes that whole class of
+failure — Drizzle records applied migrations in
+`drizzle.__drizzle_migrations`, so repeat deploys are no-ops.
+
+Seeding on build is deliberately demo scaffolding, not a data pipeline:
+`scripts/seed.ts` bails the moment it finds any existing user, so it only
+ever fills a genuinely empty database. Drop it from the `build` script once
+this app has real users.
+
+## Home page renders per request, not at build time
+
+`src/app/page.tsx` was being statically prerendered, which baked the event
+and talent listings into the build output — a talent creating an event
+would not have appeared on the home page until the next deploy. It is now
+`force-dynamic`. This also means `next build` no longer reads catalog data,
+so a build can't fail on database content.

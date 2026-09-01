@@ -3,8 +3,12 @@
  * to ship as in-memory mock data (see git history of src/lib/mock/*.ts),
  * so a new environment has realistic content instead of an empty catalog.
  *
- * Run once per fresh database: `npm run db:seed` (after `npm run db:push`
- * or `npm run db:migrate` has created the tables).
+ * Runs as part of `npm run build` (after migrations), so a deployment
+ * against a brand-new database comes up with content rather than an empty
+ * app. It bails out the moment it finds any existing user, so it only ever
+ * populates a genuinely empty database and never touches real data — but
+ * that also makes it demo scaffolding, not a production data pipeline:
+ * drop it from the build once this app has real users.
  */
 import "dotenv/config";
 import { eq } from "drizzle-orm";

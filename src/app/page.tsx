@@ -26,6 +26,14 @@ const eventCategories = [
   { value: "networking", label: "Networking" },
 ];
 
+/**
+ * Rendered per request, not baked at build time: the home page lists live
+ * catalog data (events and talent), so a static snapshot would go stale the
+ * moment a talent creates an event. It also keeps `next build` from needing
+ * to read the database at all.
+ */
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const [events, talentUsers] = await Promise.all([
     fetchEvents(),
