@@ -14,7 +14,7 @@ type CardStatus = "idle" | "processing" | "succeeded" | "failed";
 export default function CardPaymentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { event, totals, reference, lines } = useCheckout();
+  const { event, totals, reference, lines, recordOrder } = useCheckout();
   const [status, setStatus] = useState<CardStatus>("idle");
   const currency = event.ticketTiers[0]?.currency ?? "NGN";
   const simulateFailure = searchParams.get("simulate") === "fail";
@@ -36,7 +36,14 @@ export default function CardPaymentPage() {
       reference: orderReference,
     });
     const result = await paymentProvider.confirmCardPayment(intent.id);
-    setStatus(result.status === "succeeded" ? "succeeded" : "failed");
+    if (result.status !== "succeeded") {
+      setStatus("failed");
+      return;
+    }
+    // Record the purchase before showing the receipt, so the receipt never
+    // claims a confirmed order that isn't in the database.
+    await recordOrder("card");
+    setStatus("succeeded");
   }
 
   if (lines.length === 0) {

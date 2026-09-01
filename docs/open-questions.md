@@ -52,15 +52,13 @@ reachable to build accept/decline/terms/deliver against. Add a real
 confirmation UI on the fan's side (e.g. under a "my requests" page) when
 that's in scope, and remove this button.
 
-## Sign-up doesn't add the new talent to the mock directory
+## Sign-up doesn't add the new talent to the mock directory — resolved
 
-`AuthContext.signUp` mints a new `User` client-side and stores it in
-`localStorage`, but `src/lib/mock/talents.ts` is a static array — a
-newly-signed-up talent isn't added to it. Their own profile link
-(`/talent/[id]`) and dashboard work (both read straight from the auth
-context), but they won't show up in Home's "Top Celebrities" or the
-search/browse listings, and a fresh browser profile won't remember them
-either. Fine for a stubbed backend; wire it up once there's a real one.
+Was: `AuthContext.signUp` minted a `User` client-side, so a new talent
+never appeared in Home's "Top Celebrities" or the browse listings. Fixed
+by the Postgres migration — `signUp` now inserts real `users` and
+`talent_profiles` rows, and the directory reads those, so a newly signed-up
+talent shows up everywhere the listings query.
 
 ## Ancillary marketing links are placeholders
 
@@ -120,3 +118,17 @@ supports them.
 
 No 390px frame for the header/subpage-nav was reviewed in Phase 1. Adapted
 into a bottom tab bar. Confirm against a real mobile frame if one exists.
+
+## Ticket inventory can oversell under concurrency
+
+`createTicketOrder` increments `ticket_tiers.quantity_sold` but nothing
+locks the row or enforces a ceiling, so two simultaneous purchases of the
+last ticket both succeed. Fine for a demo; a real launch needs reserved
+inventory (a hold at cart time, released on abandonment) or at minimum a
+constraint plus a retry on conflict.
+
+## No "my tickets" screen
+
+Orders are recorded and can be fetched by reference, but nothing surfaces a
+buyer's past purchases. The footer already links to "My tickets", which has
+no page behind it.

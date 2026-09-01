@@ -27,7 +27,7 @@ const currencyFormatter = (currency: string) =>
 export default function BankTransferPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { event, totals, reference, lines } = useCheckout();
+  const { event, totals, reference, lines, recordOrder } = useCheckout();
   const [status, setStatus] = useState<BankTransferStatus>("awaiting_transfer");
   const [secondsLeft, setSecondsLeft] = useState(TRANSFER_WINDOW_SECONDS);
   const [copied, setCopied] = useState(false);
@@ -67,11 +67,14 @@ export default function BankTransferPage() {
     setStatus((s) => transition(s, { type: "VERIFICATION_STARTED" }));
 
     const result = await paymentProvider.confirmBankTransfer(intent.id);
-    setStatus((s) =>
-      transition(s, {
-        type: result.status === "succeeded" ? "VERIFICATION_SUCCEEDED" : "VERIFICATION_FAILED",
-      }),
-    );
+    if (result.status !== "succeeded") {
+      setStatus((s) => transition(s, { type: "VERIFICATION_FAILED" }));
+      return;
+    }
+    // Record the purchase before showing it as verified, so a confirmed
+    // transfer always corresponds to an order in the database.
+    await recordOrder("bank-transfer");
+    setStatus((s) => transition(s, { type: "VERIFICATION_SUCCEEDED" }));
   }
 
   useEffect(() => {

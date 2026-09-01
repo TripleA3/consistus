@@ -271,3 +271,33 @@ and talent listings into the build output — a talent creating an event
 would not have appeared on the home page until the next deploy. It is now
 `force-dynamic`. This also means `next build` no longer reads catalog data,
 so a build can't fail on database content.
+
+## Ticket purchases are recorded (ticket_orders reworked)
+
+Checkout previously ran end-to-end and showed a receipt without writing
+anything to the database — `ticket_orders` existed but nothing used it.
+Purchases are now persisted, which required reshaping the table:
+
+- **Orders and line items are separate.** The old table carried a single
+  `tier_id` and `quantity`, but a cart can hold several tiers and the
+  service fee is charged per order, not per tier (see `src/lib/pricing.ts`).
+  So `ticket_orders` holds the order-level totals and `ticket_order_items`
+  holds one row per tier, snapshotting tier name and unit price so a later
+  price edit doesn't rewrite what someone already paid.
+- **`buyer_id` is nullable.** Checkout does not require an account, so the
+  buyer's name/email/phone live on the order and link to a user only when
+  one is signed in. Guest checkout does not silently create accounts.
+- **Recording is idempotent on `reference`.** A retried or double-submitted
+  payment returns the order already recorded rather than selling the
+  tickets twice.
+- **Purchases move inventory.** `ticket_tiers.quantity_sold` is incremented
+  in the same transaction, so the availability the ticket picker shows
+  reflects real sales.
+
+Both payment paths call one `recordOrder` on the checkout context rather
+than each writing their own order, and they record *before* showing a
+confirmed state, so a receipt never claims an order that isn't stored.
+
+Still open: nothing prevents overselling under concurrency — two
+simultaneous buyers can both pass the availability check. That needs a
+real inventory reservation, which is out of scope here.

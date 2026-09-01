@@ -30,6 +30,7 @@ export const ticketOrderStatusEnum = pgEnum("ticket_order_status", [
   "cancelled",
   "refunded",
 ]);
+export const paymentMethodEnum = pgEnum("payment_method", ["bank-transfer", "card"]);
 export const requestTypeEnum = pgEnum("request_type", [
   "personalised-video",
   "guest-speaker",
@@ -118,24 +119,48 @@ export const ticketTiers = pgTable("ticket_tiers", {
   perks: text("perks").array().notNull().default([]),
 });
 
+/**
+ * One row per completed checkout. `buyerId` is nullable because checkout
+ * does not require an account — the buyer's contact details are captured
+ * on the order itself, and linked to a user only when one is signed in.
+ * Fees are charged per order (see src/lib/pricing.ts), not per tier, so
+ * the per-tier breakdown lives in ticket_order_items.
+ */
 export const ticketOrders = pgTable("ticket_orders", {
   id: uuid("id").primaryKey().defaultRandom(),
   eventId: uuid("event_id")
     .notNull()
     .references(() => events.id, { onDelete: "cascade" }),
-  tierId: uuid("tier_id")
-    .notNull()
-    .references(() => ticketTiers.id, { onDelete: "cascade" }),
-  buyerId: uuid("buyer_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  quantity: integer("quantity").notNull(),
+  buyerId: uuid("buyer_id").references(() => users.id, { onDelete: "set null" }),
+  buyerName: text("buyer_name").notNull(),
+  buyerEmail: text("buyer_email").notNull(),
+  buyerPhone: text("buyer_phone").notNull().default(""),
+  // The customer-facing reference shown on the receipt. Unique so a
+  // resubmitted payment can't record the same purchase twice.
+  reference: text("reference").notNull().unique(),
+  paymentMethod: paymentMethodEnum("payment_method").notNull(),
   subtotal: integer("subtotal").notNull(),
   fees: integer("fees").notNull(),
   total: integer("total").notNull(),
   currency: text("currency").notNull().default("NGN"),
   status: ticketOrderStatusEnum("status").notNull().default("pending"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const ticketOrderItems = pgTable("ticket_order_items", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  orderId: uuid("order_id")
+    .notNull()
+    .references(() => ticketOrders.id, { onDelete: "cascade" }),
+  tierId: uuid("tier_id")
+    .notNull()
+    .references(() => ticketTiers.id, { onDelete: "cascade" }),
+  // Snapshot of name and price at purchase time, so a later tier edit
+  // doesn't rewrite what someone already paid.
+  tierName: text("tier_name").notNull(),
+  unitPrice: integer("unit_price").notNull(),
+  quantity: integer("quantity").notNull(),
+  lineTotal: integer("line_total").notNull(),
 });
 
 export const talentRequests = pgTable("talent_requests", {

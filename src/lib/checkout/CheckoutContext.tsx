@@ -12,6 +12,8 @@ import {
 } from "react";
 import type { EventItem, PaymentMethodType } from "@/lib/types";
 import { calculateOrderTotals, type CartLine } from "@/lib/pricing";
+import { createTicketOrder } from "@/lib/api/orders";
+import { useAuth } from "@/lib/auth/AuthContext";
 
 export type BuyerDetails = {
   name: string;
@@ -38,6 +40,12 @@ type CheckoutContextValue = {
   paymentMethod: PaymentMethodType | null;
   setPaymentMethod: (method: PaymentMethodType) => void;
   reference: string;
+  /**
+   * Persists the purchase once payment succeeds. Both payment methods call
+   * this, so the order is recorded in exactly one place. Idempotent on the
+   * checkout reference — calling it twice records one order.
+   */
+  recordOrder: (method: PaymentMethodType) => Promise<void>;
 };
 
 const CheckoutReactContext = createContext<CheckoutContextValue | null>(null);
@@ -55,6 +63,7 @@ export function CheckoutProvider({
   event: EventItem;
   children: ReactNode;
 }) {
+  const { user } = useAuth();
   const [state, setState] = useState<CheckoutState>(() => ({
     event,
     quantities: {},
@@ -125,6 +134,32 @@ export function CheckoutProvider({
 
   const totals = useMemo(() => calculateOrderTotals(lines), [lines]);
 
+  const recordOrder = useCallback(
+    async (method: PaymentMethodType) => {
+      if (lines.length === 0) return;
+      await createTicketOrder({
+        eventId: event.id,
+        buyerId: user?.id,
+        buyerName: state.buyer.name,
+        buyerEmail: state.buyer.email,
+        buyerPhone: state.buyer.phone,
+        reference: state.reference,
+        paymentMethod: method,
+        subtotal: totals.subtotal,
+        fees: totals.fees,
+        total: totals.total,
+        currency: event.ticketTiers[0]?.currency ?? "NGN",
+        items: lines.map((line) => ({
+          tierId: line.tier.id,
+          tierName: line.tier.name,
+          unitPrice: line.tier.price,
+          quantity: line.quantity,
+        })),
+      });
+    },
+    [event, lines, totals, state.buyer, state.reference, user?.id],
+  );
+
   const value: CheckoutContextValue = {
     event,
     quantities: state.quantities,
@@ -136,6 +171,7 @@ export function CheckoutProvider({
     paymentMethod: state.paymentMethod,
     setPaymentMethod,
     reference: state.reference,
+    recordOrder,
   };
 
   return (

@@ -8,6 +8,20 @@
       "when": 1788251947597,
       "tag": "0000_clever_eternals",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788271852847,
+      "tag": "0001_legal_captain_universe",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788271860963,
+      "tag": "0002_puzzling_vertigo",
+      "breakpoints": true
     }
   ]
 }

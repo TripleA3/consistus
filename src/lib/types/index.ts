@@ -64,18 +64,33 @@ export interface TicketTier {
   perks: string[];
 }
 
+export interface TicketOrderItem {
+  id: string;
+  orderId: string;
+  tierId: string;
+  tierName: string;
+  unitPrice: number;
+  quantity: number;
+  lineTotal: number;
+}
+
 export interface TicketOrder {
   id: string;
   eventId: string;
-  tierId: string;
-  buyerId: string;
-  quantity: number;
+  /** Null for guest checkout — buyer contact details are on the order. */
+  buyerId?: string;
+  buyerName: string;
+  buyerEmail: string;
+  buyerPhone: string;
+  reference: string;
+  paymentMethod: PaymentMethodType;
   subtotal: number;
   fees: number;
   total: number;
   currency: string;
   status: "pending" | "paid" | "cancelled" | "refunded";
   createdAt: string;
+  items: TicketOrderItem[];
 }
 
 export type RequestType =
