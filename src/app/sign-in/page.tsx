@@ -13,7 +13,7 @@ export default function SignInPage() {
   const { signIn } = useAuth();
   const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = String(data.get("email") ?? "").trim();
@@ -25,7 +25,7 @@ export default function SignInPage() {
     }
 
     // No real backend — any credentials sign in as the one seed account.
-    signIn(email);
+    await signIn(email);
     router.push("/");
   }
 

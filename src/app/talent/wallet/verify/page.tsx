@@ -32,7 +32,7 @@ function VerifyView() {
     await new Promise((resolve) => setTimeout(resolve, 1200));
     // Keep the auth session and the public talent directory in sync — two
     // separate mock stores, since there's no shared backend yet.
-    updateTalentProfile({ verified: true });
+    await updateTalentProfile({ verified: true });
     await updateTalentDirectoryProfile(user!.id, { verified: true });
     setStatus("verified");
   }

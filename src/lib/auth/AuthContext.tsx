@@ -9,7 +9,11 @@ import {
   type ReactNode,
 } from "react";
 import type { TalentCategory, TalentProfile, User, UserRole } from "@/lib/types";
-import { DEMO_USER } from "@/lib/auth/session";
+import {
+  signIn as signInAction,
+  signUp as signUpAction,
+  updateTalentProfile as updateTalentProfileAction,
+} from "@/lib/api/auth";
 
 const STORAGE_KEY = "fannero-auth-user";
 
@@ -24,22 +28,24 @@ export type SignUpInput = {
 type AuthContextValue = {
   user: User | null;
   status: "loading" | "ready";
-  signIn: (email: string) => void;
-  signUp: (input: SignUpInput) => void;
+  signIn: (email: string) => Promise<void>;
+  signUp: (input: SignUpInput) => Promise<void>;
   signOut: () => void;
-  updateTalentProfile: (patch: Partial<TalentProfile>) => void;
+  updateTalentProfile: (patch: Partial<TalentProfile>) => Promise<void>;
 };
 
 const AuthReactContext = createContext<AuthContextValue | null>(null);
 
 /**
- * Stubbed auth for the brief's single-account default. There is no real
- * backend: `signIn` always resolves to the one seed account (any email
- * "works", matching the brief's approved default), and `signUp` mints a
- * fresh local user from the form. State is kept in localStorage so it
- * survives reloads within this browser, and nowhere else — replace with a
- * real provider (NextAuth, Clerk, ...) without touching call sites, since
- * everything goes through `useAuth()`.
+ * Stubbed auth for the brief's single-account default: no real password
+ * check, `signIn` always resolves to the one seed account (any email
+ * "works"). Session identity is now backed by real DB rows (see
+ * src/lib/api/auth.ts) so ids are stable and satisfy the FK constraints
+ * other tables reference; only the *session* (who's currently signed in
+ * on this device) is client-side, mirrored to localStorage so it survives
+ * reloads in this browser. Replace with a real provider (NextAuth,
+ * Clerk, ...) without touching call sites, since everything goes through
+ * `useAuth()`.
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -74,42 +80,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [user]);
 
-  function signIn(email: string) {
-    setUser({ ...DEMO_USER, email: email || DEMO_USER.email });
+  // `email` is ignored by the backend (no real password check, per the
+  // brief's stubbed-auth default) but kept on the signature since the form
+  // still collects it and callers may want to display what was typed.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async function signIn(_email: string) {
+    const signedIn = await signInAction();
+    setUser(signedIn);
   }
 
-  function signUp(input: SignUpInput) {
-    const id = `user-${Date.now().toString(36)}`;
-    const newUser: User = {
-      id,
-      name: input.name,
-      email: input.email,
-      roles: [input.role],
-      talentProfile:
-        input.role === "talent"
-          ? {
-              id: `profile-${id}`,
-              userId: id,
-              category: input.talentCategory ?? "artist",
-              bio: input.bio ?? "",
-              verified: false,
-              ratePerVideo: 20000,
-              ratePerAppearance: 100000,
-              followerCount: 0,
-            }
-          : undefined,
-    };
-    setUser(newUser);
+  async function signUp(input: SignUpInput) {
+    const created = await signUpAction(input);
+    setUser(created);
   }
 
   function signOut() {
     setUser(null);
   }
 
-  function updateTalentProfile(patch: Partial<TalentProfile>) {
+  async function updateTalentProfile(patch: Partial<TalentProfile>) {
     setUser((prev) =>
       prev?.talentProfile ? { ...prev, talentProfile: { ...prev.talentProfile, ...patch } } : prev,
     );
+    if (user) {
+      await updateTalentProfileAction(user.id, patch);
+    }
   }
 
   return (

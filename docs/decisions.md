@@ -207,3 +207,40 @@ Built a reasonable talent profile page instead — see
 Figma frame (under `6007:41251`) is an unbuilt grey placeholder rectangle
 row with no content, as the brief warned. Built a reasonable 3-step
 explainer (`HowItWorks.tsx`) rather than stalling.
+
+## Migrated from in-memory mock data to Postgres (Drizzle ORM)
+
+Beyond the brief's original "mock the backend" default: `src/lib/mock/*.ts`
+is gone, replaced by a real schema (`src/db/schema.ts`) and Drizzle-backed
+Server Actions (`src/lib/api/*.ts`, `src/lib/auth/AuthContext.tsx` now
+calls `src/lib/api/auth.ts` instead of constructing users locally). A few
+decisions worth flagging:
+
+- **Real ids, not fake client-generated ones.** The mock store used strings
+  like `talent-1` and `user-${Date.now()}`; Postgres foreign keys need real
+  row ids that exist before anything references them, so every id is now a
+  DB-generated UUID. `signUp`/`signIn` are Server Actions that insert (or
+  look up) the row and hand back its real id.
+- **`wallet_balances` is a new table**, not in the original mental model —
+  the mock kept a `Record<talentId, WalletSummary>` mutated directly on
+  withdrawal. There was no way to derive `pendingBalance` from transaction
+  history (nothing in the app currently moves money into "pending"), so it
+  stays a directly-written column, mirroring the mock's behavior exactly
+  rather than inventing a payout-pending pipeline that doesn't exist yet.
+- **Event list ordering changed slightly.** The mock array was a fixed
+  seed list read in insertion order, with newly created events `unshift`ed
+  to the front. The DB version orders by `created_at` ascending (seed
+  order is preserved) but a newly created event now lands at the end of
+  the list rather than jumping to the top — a deliberate simplification
+  rather than reproducing "recently added floats to top" as real product
+  behavior.
+- **Ticket orders are unchanged in scope.** `ticket_orders` exists in the
+  schema (mirroring `TicketOrder` in `src/lib/types`) but nothing writes to
+  it yet — the checkout flow (`src/lib/checkout/CheckoutContext.tsx`) never
+  persisted an order server-side even in the mock version, so this
+  migration didn't add that write path either. Still open, not silently
+  dropped.
+- **`scripts/seed.ts`** reproduces the old mock data (4 talents, 4 events,
+  1 sample request, notifications, wallet history) against a fresh
+  database via `npm run db:seed`, so a new environment isn't empty. It
+  no-ops if `users` already has rows, so it's safe to run more than once.

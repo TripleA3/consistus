@@ -24,7 +24,7 @@ export default function SignUpPage() {
   const [role, setRole] = useState<UserRole>("fan");
   const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const name = String(data.get("name") ?? "").trim();
@@ -42,7 +42,7 @@ export default function SignUpPage() {
       return;
     }
 
-    signUp({
+    await signUp({
       name,
       email,
       role,
