@@ -1,10 +1,15 @@
 "use server";
 
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
-import { talentRequests } from "@/db/schema";
+import { talentRequests, users, walletBalances, walletTransactions } from "@/db/schema";
 import { transitionRequest, type RequestEvent } from "@/lib/requests/requestStateMachine";
-import type { RequestStatus, RequestType, TalentRequest } from "@/lib/types";
+import type {
+  RequestStatus,
+  RequestType,
+  TalentRequest,
+  TalentRequestWithTalent,
+} from "@/lib/types";
 
 function toTalentRequest(row: typeof talentRequests.$inferSelect): TalentRequest {
   return {
@@ -24,6 +29,14 @@ function toTalentRequest(row: typeof talentRequests.$inferSelect): TalentRequest
     termsAcceptedAt: row.termsAcceptedAt?.toISOString(),
   };
 }
+
+/** How a completed request reads on the talent's wallet statement. */
+const REQUEST_EARNING_LABEL: Record<RequestType, string> = {
+  "personalised-video": "Personalised video",
+  "guest-speaker": "Guest speaker",
+  "special-appearance": "Special appearance",
+  "event-invitation": "Event invitation",
+};
 
 export type CreateRequestInput = {
   type: RequestType;
@@ -65,6 +78,25 @@ export async function fetchRequestsByFanId(fanId: string): Promise<TalentRequest
   return rows.map(toTalentRequest);
 }
 
+/**
+ * A fan's own requests, newest first, with the talent they were sent to —
+ * so the fan-side list can name the talent without a second lookup.
+ */
+export async function fetchRequestsForFan(
+  fanId: string,
+): Promise<TalentRequestWithTalent[]> {
+  const rows = await db
+    .select()
+    .from(talentRequests)
+    .innerJoin(users, eq(users.id, talentRequests.talentId))
+    .where(eq(talentRequests.fanId, fanId))
+    .orderBy(desc(talentRequests.createdAt));
+  return rows.map((row) => ({
+    ...toTalentRequest(row.talent_requests),
+    talent: { id: row.users.id, name: row.users.name },
+  }));
+}
+
 export async function submitRequest(input: CreateRequestInput): Promise<TalentRequest> {
   const [created] = await db
     .insert(talentRequests)
@@ -92,14 +124,47 @@ export async function applyRequestEvent(
   const [existing] = await db.select().from(talentRequests).where(eq(talentRequests.id, id));
   if (!existing) return undefined;
   const status = transitionRequest(existing.status as RequestStatus, event);
-  const [updated] = await db
-    .update(talentRequests)
-    .set({
-      status,
-      termsAcceptedAt: extra?.termsAcceptedAt ? new Date(extra.termsAcceptedAt) : undefined,
-      deliveryUrl: extra?.deliveryUrl,
-    })
-    .where(eq(talentRequests.id, id))
-    .returning();
-  return toTalentRequest(updated);
+
+  return db.transaction(async (tx) => {
+    const [updated] = await tx
+      .update(talentRequests)
+      .set({
+        status,
+        termsAcceptedAt: extra?.termsAcceptedAt ? new Date(extra.termsAcceptedAt) : undefined,
+        deliveryUrl: extra?.deliveryUrl,
+      })
+      .where(eq(talentRequests.id, id))
+      .returning();
+
+    // Completing a request is what actually pays the talent — the fan's
+    // confirmation screen promises exactly this. Guarded on the status
+    // having just changed, so re-confirming can't pay twice.
+    if (status === "completed" && existing.status !== "completed") {
+      await tx.insert(walletTransactions).values({
+        talentId: updated.talentId,
+        kind: "credit",
+        reason: `${REQUEST_EARNING_LABEL[updated.type as RequestType]}${
+          updated.recipientName ? ` — ${updated.recipientName}` : ""
+        }`,
+        amount: updated.amount,
+        currency: updated.currency,
+        relatedRequestId: updated.id,
+      });
+      await tx
+        .insert(walletBalances)
+        .values({
+          talentId: updated.talentId,
+          availableBalance: updated.amount,
+          currency: updated.currency,
+        })
+        .onConflictDoUpdate({
+          target: walletBalances.talentId,
+          set: {
+            availableBalance: sql`${walletBalances.availableBalance} + ${updated.amount}`,
+          },
+        });
+    }
+
+    return toTalentRequest(updated);
+  });
 }

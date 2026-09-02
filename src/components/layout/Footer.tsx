@@ -14,6 +14,7 @@ const columns: { title: string; links: { href: string; label: string }[] }[] = [
     links: [
       { href: "/events", label: "Browse events" },
       { href: "/tickets", label: "My tickets" },
+      { href: "/requests", label: "My requests" },
       { href: "/favorites", label: "Favorites" },
     ],
   },

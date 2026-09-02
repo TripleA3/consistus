@@ -138,6 +138,11 @@ export interface TicketOrderWithEvent extends TicketOrder {
   };
 }
 
+/** A request plus the talent it was sent to, for the fan's own list. */
+export interface TalentRequestWithTalent extends TalentRequest {
+  talent: { id: string; name: string };
+}
+
 export type PaymentMethodType = "bank-transfer" | "card";
 
 export interface PaymentIntentResult {

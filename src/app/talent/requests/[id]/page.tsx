@@ -167,15 +167,6 @@ function RequestDetailView({ paramsPromise }: { paramsPromise: Promise<{ id: str
                 {request.deliveryUrl}
               </a>
             ) : null}
-            <Button
-              variant="neutral"
-              size="sm"
-              className="mx-auto"
-              disabled={busy}
-              onClick={() => fire({ type: "FAN_CONFIRMS" })}
-            >
-              Simulate fan confirmation
-            </Button>
           </div>
         ) : null}
 

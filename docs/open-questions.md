@@ -41,16 +41,14 @@ them with `===`. Fixed in the Postgres migration — `wallet_pins.pin_hash`
 now stores a salted scrypt hash (`src/lib/api/wallet.ts`), and the raw PIN
 never round-trips beyond the request that sets or checks it.
 
-## "Simulate fan confirmation" is a stand-in for real fan-side confirmation
+## "Simulate fan confirmation" is a stand-in — resolved
 
-The request detail page's `delivered` state has a "Simulate fan
-confirmation" button that moves the request straight to `completed`. There
-is no real fan-facing "confirm you received this" screen yet — building
-one wasn't in the Phase 5 scope (fan-side submission, amount,
-confirmation-of-request-sent), and Phase 6 needed the full state machine
-reachable to build accept/decline/terms/deliver against. Add a real
-confirmation UI on the fan's side (e.g. under a "my requests" page) when
-that's in scope, and remove this button.
+Was: the talent's request page carried a "Simulate fan confirmation"
+button because no fan-facing confirmation existed. `/requests` now gives
+fans their own list, where a delivered request shows the delivery and a
+"Confirm you received this" action that fires `FAN_CONFIRMS`. The simulate
+button is gone from the talent side, which now just says it's waiting on
+the fan.
 
 ## Sign-up doesn't add the new talent to the mock directory — resolved
 

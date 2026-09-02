@@ -301,3 +301,27 @@ confirmed state, so a receipt never claims an order that isn't stored.
 Still open: nothing prevents overselling under concurrency — two
 simultaneous buyers can both pass the availability check. That needs a
 real inventory reservation, which is out of scope here.
+
+## Fans get their own requests list, with real confirmation
+
+Fans could submit requests but never see them again — the only view was
+the talent's inbox. `/requests` now lists a fan's own requests with status,
+talent, amount and occasion, and closes the last gap in the request state
+machine: a `delivered` request shows the delivery and a "Confirm you
+received this" action firing `FAN_CONFIRMS`, which is what releases
+payment. The talent page's "Simulate fan confirmation" stand-in is
+removed — that transition now only happens where it should, on the fan's
+side.
+
+Confirmation re-reads the list from the server rather than patching status
+locally, so what's shown is whatever the state machine actually decided.
+
+## Completing a request pays the talent
+
+The fan's confirmation screen says "Confirming releases payment", and the
+talent's page said payment had been added to their wallet — but nothing
+credited it. Completing a request now inserts a `wallet_transactions`
+credit (linked back through the `related_request_id` column that already
+existed for this) and adds the amount to `wallet_balances`, in the same
+transaction as the status change. Guarded on the status having actually
+changed, so re-confirming a completed request can't pay twice.
