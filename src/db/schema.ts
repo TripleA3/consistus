@@ -5,6 +5,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -183,6 +184,29 @@ export const talentRequests = pgTable("talent_requests", {
   deliveryUrl: text("delivery_url"),
   termsAcceptedAt: timestamp("terms_accepted_at", { withTimezone: true }),
 });
+
+/**
+ * A fan's saved events and talent. Exactly one of `eventId`/`talentId` is
+ * set per row; the unique indexes stop the same thing being saved twice.
+ * (Postgres treats NULLs as distinct, so the event index doesn't constrain
+ * talent rows and vice versa.)
+ */
+export const favorites = pgTable(
+  "favorites",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    eventId: uuid("event_id").references(() => events.id, { onDelete: "cascade" }),
+    talentId: uuid("talent_id").references(() => users.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("favorites_user_event_unique").on(table.userId, table.eventId),
+    uniqueIndex("favorites_user_talent_unique").on(table.userId, table.talentId),
+  ],
+);
 
 export const notifications = pgTable("notifications", {
   id: uuid("id").primaryKey().defaultRandom(),

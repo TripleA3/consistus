@@ -1,5 +1,6 @@
 "use client";
 
+import { FavoriteButton } from "@/components/favorites/FavoriteButton";
 import { useState } from "react";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { Button, ButtonLink } from "@/components/ui/Button";
@@ -86,6 +87,11 @@ export function TalentProfileHeader({ talent, profile }: TalentProfileHeaderProp
           >
             Book an appearance — {currencyFormatter.format(profile.ratePerAppearance)}
           </ButtonLink>
+          <FavoriteButton
+            talentId={talent.id}
+            withLabel
+            className="justify-center rounded-full border border-card-border px-5 py-2.5"
+          />
         </div>
       </div>
     </div>

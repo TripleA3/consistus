@@ -1,5 +1,6 @@
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { Icon } from "@/components/ui/Icon";
+import { FavoriteButton } from "@/components/favorites/FavoriteButton";
 import type { EventItem } from "@/lib/types";
 
 const categoryLabel: Record<EventItem["category"], string> = {
@@ -64,12 +65,7 @@ export function EventInfoCard({ event }: EventInfoCardProps) {
           By {event.organizerName}
         </p>
         <div className="flex items-center gap-4 text-text/70">
-          <button type="button" aria-label="Save to favorites">
-            <Icon name="heart" className="size-6" />
-          </button>
-          <button type="button" aria-label="Bookmark event">
-            <Icon name="ticket" className="size-6" />
-          </button>
+          <FavoriteButton eventId={event.id} />
         </div>
       </div>
     </div>

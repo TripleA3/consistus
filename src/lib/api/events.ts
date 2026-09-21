@@ -1,6 +1,6 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { eq, gte } from "drizzle-orm";
 import { db } from "@/db";
 import { events, ticketTiers } from "@/db/schema";
 import type { EventCategory, EventItem, TicketTier } from "@/lib/types";
@@ -77,6 +77,13 @@ export async function fetchEventById(id: string): Promise<EventItem | undefined>
   if (!row) return undefined;
   const tiers = await db.select().from(ticketTiers).where(eq(ticketTiers.eventId, id));
   return toEventItem(row, tiers);
+}
+
+/** Events that haven't started yet, soonest first. */
+export async function fetchUpcomingEvents(): Promise<EventItem[]> {
+  const rows = await db.select().from(events).where(gte(events.startsAt, new Date()));
+  const assembled = await assembleEvents(rows);
+  return assembled.sort((a, b) => (a.startsAt < b.startsAt ? -1 : 1));
 }
 
 export async function fetchEventsByTalentId(talentId: string): Promise<EventItem[]> {
