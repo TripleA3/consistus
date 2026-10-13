@@ -1,95 +1,129 @@
 @import "tailwindcss";
 
+@import "../styles/tokens/colors.css";
+@import "../styles/tokens/semantic.css";
+@import "../styles/tokens/typography.css";
+@import "../styles/tokens/spacing.css";
+@import "../styles/tokens/mobile.css";
+
 /*
- * Fannero design tokens, extracted from Figma file RLCWKlUcOHmlxKuyOxx7cN.
- * Verified against real usage in product frames (section 6007:*), not the
- * generic "Design System" page (node 1:3), which turned out to be an
- * un-rebranded Untitled UI starter kit — see docs/decisions.md.
+ * Dark mode is a `.dark` class we set ourselves (theme can be pinned to
+ * light or dark regardless of the OS), so Tailwind's dark: variant has to
+ * follow the class rather than the media query.
  */
-:root {
-  /* Brand */
-  --color-primary: #d2ff7c; /* pale lime — primary buttons, chip fills */
-  --color-accent: #a7f229; /* Sulu/400 — active nav / selected states */
-  --color-lime-100: #ecfccb;
-  --color-lime-200: #d9f99d;
-  --color-lime-500: #84cc16;
+@custom-variant dark (&:where(.dark, .dark *));
 
-  /* Neutrals */
-  --color-ink: #0f1727; /* --black in Figma */
-  --color-text: #111827; /* heading text */
-  --color-background: #fafeff;
-  --color-navy: #000e2d; /* dark card panels (celebrity cards, footer) */
-  --color-card-border: #d0d5dd;
-  --color-border: #eaecf0;
-  --color-input-border: #e2e8f0;
-  --color-placeholder: #667085;
-
-  --color-slate-900: #0f172a;
-  --color-slate-500: #64748b;
-  --color-slate-400: #94a3b8;
-
-  --color-danger: #d92d20;
-  --color-success: #12b76a;
-  --color-warning: #f79009;
-  --color-info: #2e90fa;
-
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-plus-jakarta-sans);
-
-  --shadow-card: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-  --shadow-button: 0px 0px 6px 0px rgba(0, 0, 0, 0.1);
-}
-
+/* Expose the semantic roles to Tailwind utilities (bg-card, text-muted-foreground, …). */
 @theme inline {
-  --color-primary: var(--color-primary);
-  --color-accent: var(--color-accent);
-  --color-lime-100: var(--color-lime-100);
-  --color-lime-200: var(--color-lime-200);
-  --color-lime-500: var(--color-lime-500);
+  --color-background: var(--background);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-cta: var(--cta);
+  --color-cta-foreground: var(--cta-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-link: var(--link);
 
-  --color-ink: var(--color-ink);
-  --color-text: var(--color-text);
-  --color-background: var(--color-background);
-  --color-navy: var(--color-navy);
-  --color-card-border: var(--color-card-border);
-  --color-border: var(--color-border);
-  --color-input-border: var(--color-input-border);
-  --color-placeholder: var(--color-placeholder);
-
-  --color-slate-900: var(--color-slate-900);
-  --color-slate-500: var(--color-slate-500);
-  --color-slate-400: var(--color-slate-400);
-
-  --color-danger: var(--color-danger);
-  --color-success: var(--color-success);
-  --color-warning: var(--color-warning);
-  --color-info: var(--color-info);
+  /* Ramps, for the few places a specific step is called for (hero tiles,
+     stripe placeholders, confetti) — prefer the roles above. */
+  --color-indigo-50: var(--indigo-50);
+  --color-indigo-100: var(--indigo-100);
+  --color-indigo-200: var(--indigo-200);
+  --color-indigo-300: var(--indigo-300);
+  --color-indigo-600: var(--indigo-600);
+  --color-indigo-800: var(--indigo-800);
+  --color-indigo-900: var(--indigo-900);
+  --color-indigo-950: var(--indigo-950);
+  --color-lime-100: var(--lime-100);
+  --color-lime-400: var(--lime-400);
+  --color-lime-600: var(--lime-600);
+  --color-ink-100: var(--ink-100);
+  --color-ink-400: var(--ink-400);
+  --color-ink-500: var(--ink-500);
+  --color-ink-850: var(--ink-850);
+  --color-ink-900: var(--ink-900);
+  --color-ink-950: var(--ink-950);
 
   --font-sans: var(--font-sans);
-  --font-display: var(--font-display);
+  --font-accent: var(--font-accent);
+  --font-mono: var(--font-mono);
 
-  --shadow-card: var(--shadow-card);
-  --shadow-button: var(--shadow-button);
+  --text-display-sm: var(--display-sm);
+  --text-headline-lg: var(--headline-lg);
+  --text-headline-md: var(--headline-md);
+  --text-headline-sm: var(--headline-sm);
+  --text-title-lg: var(--title-lg);
+  --text-title-md: var(--title-md);
+  --text-body: var(--body);
+  --text-caption: var(--caption);
+  --text-micro: var(--micro);
+
+  --radius-pill: var(--radius-pill);
+  --radius-input: var(--radius-input);
+  --radius-row: var(--radius-row);
+  --radius-tile: var(--radius-tile);
+  --radius-card: var(--radius-card);
+  --radius-section: var(--radius-section);
+  --radius-hero: var(--radius-hero);
+
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
   }
-}
 
-body {
-  background: var(--color-background);
-  color: var(--color-text);
-  font-family: var(--font-sans), system-ui, sans-serif;
-}
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: var(--body);
+    /* Theme switches shouldn't snap. */
+    transition: background-color 0.2s ease;
+  }
 
-:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: var(--tracking-heading);
+    font-weight: 700;
+  }
+
+  /* One focus treatment everywhere, per the interaction spec. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  [disabled],
+  [aria-disabled="true"] {
+    opacity: 0.45;
+  }
+
+  /* The striped cover used wherever a real image hasn't been supplied. */
+  [data-cover-placeholder] {
+    background-color: var(--indigo-900);
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--indigo-800) 0 18px,
+      transparent 18px 40px
+    );
+  }
 }

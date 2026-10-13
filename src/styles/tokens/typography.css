@@ -1,0 +1,28 @@
+/*
+ * Type scale. Fluid roles use clamp so headings settle between phone and
+ * desktop without breakpoints. Headings carry -0.025em tracking.
+ */
+:root {
+  --font-sans: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
+  /* Italic only, one accent word per hero headline. */
+  --font-accent: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+
+  --display-sm: clamp(1.875rem, 1.5rem + 1.6vw, 2.25rem);
+  --display-sm-weight: 700;
+  --display-sm-leading: 1.2;
+
+  --headline-lg: clamp(1.625rem, 1.35rem + 1.2vw, 2rem);
+  --headline-md: clamp(1.5rem, 1.3rem + 0.85vw, 1.75rem);
+  --headline-sm: 1.5rem;
+
+  --title-lg: 1.375rem;
+  --title-md: 1rem;
+
+  --body: 0.9375rem; /* 15px */
+  --caption: 0.8125rem; /* 13px */
+  --micro: 0.6875rem; /* 11px, 700 */
+  --micro-lg: 0.75rem; /* 12px, 700 */
+
+  --tracking-heading: -0.025em;
+}

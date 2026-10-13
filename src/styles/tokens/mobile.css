@@ -1,0 +1,43 @@
+/*
+ * Phone rules. Mobile is the primary target, so these are overrides of the
+ * desktop defaults rather than the other way round.
+ */
+@media (max-width: 639px) {
+  :root {
+    --gutter: 12px;
+    --radius-section: 20px;
+  }
+
+  /* Clears the bottom tab bar plus the home indicator. */
+  main {
+    padding: 12px 12px calc(104px + env(safe-area-inset-bottom));
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.0625rem;
+  }
+
+  /* Chip and filter rows run off the edge as one scrolling line. */
+  [data-chip-row] {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+  }
+
+  [data-chip-row]::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 16px keeps iOS from zooming the viewport on focus. */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}

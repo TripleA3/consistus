@@ -1,0 +1,70 @@
+/*
+ * Semantic roles — the only colour tokens components may read.
+ * Dark mode is a `.dark` class on <html>.
+ */
+:root {
+  --background: var(--indigo-100);
+  --card: #ffffff;
+  --card-foreground: var(--ink-900);
+  --foreground: var(--ink-900);
+
+  --muted: var(--ink-100);
+  --muted-foreground: var(--ink-500);
+
+  --primary: var(--indigo-900);
+  --primary-foreground: #ffffff;
+
+  /* The main action per screen. Lime stays lime in both themes. */
+  --cta: var(--lime-400);
+  --cta-foreground: var(--indigo-950);
+
+  --secondary: var(--indigo-200);
+  --secondary-foreground: var(--indigo-900);
+
+  --accent: var(--indigo-50);
+  --accent-foreground: var(--indigo-900);
+
+  --border: var(--ink-200);
+  --input: var(--ink-300);
+  --ring: var(--indigo-600);
+
+  --destructive: #e5484d;
+  --destructive-foreground: #ffffff;
+  --link: var(--indigo-700);
+
+  /* Indigo-tinted elevation. Cards xs, raised sections sm, menus lg. */
+  --shadow-xs: 0 1px 2px rgba(37, 34, 156, 0.08);
+  --shadow-sm: 0 2px 8px rgba(37, 34, 156, 0.1);
+  --shadow-md: 0 8px 24px rgba(37, 34, 156, 0.14);
+  --shadow-lg: 0 20px 48px rgba(26, 23, 112, 0.22);
+}
+
+.dark {
+  --background: var(--ink-950);
+  --card: var(--ink-900);
+  --card-foreground: var(--indigo-50);
+  --foreground: var(--indigo-50);
+
+  --muted: var(--ink-850);
+  --muted-foreground: var(--ink-400);
+
+  --primary: var(--indigo-300);
+  --primary-foreground: var(--indigo-950);
+
+  --cta: var(--lime-400);
+  --cta-foreground: var(--indigo-950);
+
+  --secondary: var(--indigo-800);
+  --secondary-foreground: var(--indigo-100);
+
+  --accent: var(--ink-850);
+  --accent-foreground: var(--indigo-100);
+
+  --border: var(--ink-800);
+  --input: var(--ink-700);
+  --ring: var(--lime-400);
+
+  --destructive: #ff6b70;
+  --destructive-foreground: var(--ink-950);
+  --link: var(--indigo-300);
+}

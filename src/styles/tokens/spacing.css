@@ -1,0 +1,26 @@
+/* Spacing on a 4px base, plus the shape scale. */
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  --page-max: 1200px;
+  --gutter: 16px; /* 12px on phone, see mobile.css */
+  --section-gap: 20px;
+
+  --radius-pill: 999px; /* all buttons and chips */
+  --radius-input: 12px;
+  --radius-row: 14px;
+  --radius-tile: 18px;
+  --radius-card: 20px;
+  --radius-section: 24px; /* 20px on phone */
+  --radius-hero: 28px;
+}

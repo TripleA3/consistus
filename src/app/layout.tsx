@@ -1,33 +1,48 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Instrument_Serif, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { ThemeScript } from "@/components/theme/ThemeScript";
 import { AuthProvider } from "@/lib/auth/AuthContext";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta-sans",
+/** Italic only — one accent word per hero headline. */
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: "400",
+  style: "italic",
+  display: "swap",
+});
+
+const jetBrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Fannero — Fan to Talent Marketplace",
+  title: "Fannero",
   description:
-    "Discover talent and events, buy tickets, and commission personalised videos and appearances from celebrities.",
+    "Buy tickets, request video shoutouts from the people you follow, join communities and enter brand challenges.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${plusJakartaSans.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${plusJakartaSans.variable} ${instrumentSerif.variable} ${jetBrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-text">
+      <head>
+        <ThemeScript />
+      </head>
+      <body className="flex min-h-full flex-col">
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
