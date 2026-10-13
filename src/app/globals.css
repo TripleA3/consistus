@@ -5,6 +5,7 @@
 @import "../styles/tokens/typography.css";
 @import "../styles/tokens/spacing.css";
 @import "../styles/tokens/mobile.css";
+@import "../styles/motion.css";
 
 /*
  * Dark mode is a `.dark` class we set ourselves (theme can be pinned to

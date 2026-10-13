@@ -1,0 +1,215 @@
+/*
+ * The CSS half of the motion layer: page transitions, the effects that are
+ * cheaper as keyframes than as script, and the global interaction states.
+ * The scripted effects live in components/motion/MotionProvider.tsx.
+ */
+
+:root {
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Page fade-in on first load. Route changes are handled by view transitions. */
+@keyframes fanero-page-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+body {
+  animation: fanero-page-in 380ms ease-out both;
+}
+
+/*
+ * Route changes cross-fade. The handoff's "fade out, then navigate" was
+ * written for full page loads between static files; holding a client-side
+ * navigation back by 200ms would just make the app feel slower, so the same
+ * intent is expressed as a real transition between old and new.
+ */
+::view-transition-old(root) {
+  animation: 200ms ease-in both fanero-vt-out;
+}
+
+::view-transition-new(root) {
+  animation: 380ms ease-out both fanero-page-in;
+}
+
+@keyframes fanero-vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* Clicks during a transition should reach the live page, not the snapshot. */
+::view-transition {
+  pointer-events: none;
+}
+
+/*
+ * Reveal targets start hidden so they don't paint once at full opacity
+ * before animating in. Gated on `.motion`, which the blocking inline script
+ * adds — without scripting the class never appears and everything renders
+ * normally, so content is never stranded invisible.
+ *
+ * Grid children stagger inside these sections, so hiding the section covers
+ * them too. Web Animations set by the motion layer override this.
+ */
+.motion main > *:not([data-no-reveal]) {
+  opacity: 0;
+}
+
+/* Shell header mount. */
+@keyframes fanero-header-in {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+[data-header] {
+  animation: fanero-header-in 700ms var(--ease-expo) both;
+}
+
+/* "Live" dots. */
+@keyframes fanero-pulse {
+  from {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55);
+  }
+  to {
+    box-shadow: 0 0 0 9px transparent;
+  }
+}
+
+[data-pulse] {
+  animation: fanero-pulse 1600ms ease-out infinite;
+}
+
+/* Overlays. The provider tags each one by shape as it mounts. */
+@keyframes fanero-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fanero-sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fanero-bottom-sheet-in {
+  from {
+    transform: translateY(120%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fanero-popover-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+[data-overlay="backdrop"] {
+  animation: fanero-backdrop-in 260ms ease-out both;
+}
+
+[data-overlay="sheet"] {
+  animation: fanero-sheet-in 650ms var(--ease-expo) both;
+}
+
+[data-overlay="bottom-sheet"] {
+  animation: fanero-bottom-sheet-in 600ms var(--ease-expo) both;
+}
+
+[data-overlay="popover"] {
+  animation: fanero-popover-in 500ms var(--ease-back) both;
+}
+
+/* Inline component transitions. */
+[data-switch-knob] {
+  transition: left 0.2s;
+}
+
+[data-switch-track] {
+  transition: background 0.2s;
+}
+
+[data-progress-fill] {
+  transition: width 0.3s;
+}
+
+/*
+ * Global interaction states. Hover tints a pill button with its own text
+ * colour rather than a fixed shade, so one rule works on lime, indigo and
+ * ghost buttons in both themes.
+ */
+button,
+[role="button"],
+a[data-pill] {
+  position: relative;
+}
+
+button:not(:disabled):hover::after,
+[role="button"]:not([aria-disabled="true"]):hover::after,
+a[data-pill]:hover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+button:not(:disabled):active::after,
+[role="button"]:not([aria-disabled="true"]):active::after,
+a[data-pill]:active::after {
+  opacity: 0.2;
+}
+
+/*
+ * Reduced motion: fades only. No translation, scaling, floating or
+ * marquee — the scripted layer makes the matching decisions itself.
+ */
+@media (prefers-reduced-motion: reduce) {
+  [data-header],
+  [data-pulse],
+  [data-overlay] {
+    animation: none;
+  }
+
+  [data-overlay="backdrop"],
+  [data-overlay="sheet"],
+  [data-overlay="popover"] {
+    animation: fanero-backdrop-in 200ms ease-out both;
+  }
+
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}

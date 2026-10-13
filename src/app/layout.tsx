@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { MotionProvider } from "@/components/motion/MotionProvider";
 import { ThemeScript } from "@/components/theme/ThemeScript";
 import { AuthProvider } from "@/lib/auth/AuthContext";
 import "./globals.css";
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="flex min-h-full flex-col">
         <AuthProvider>{children}</AuthProvider>
+        <MotionProvider />
       </body>
     </html>
   );
