@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, Star } from "@phosphor-icons/react/dist/ssr";
+import { Bell } from "@phosphor-icons/react/dist/ssr";
 import { NAV_BY_ROLE, isActive } from "@/lib/roles";
 import { useRole } from "@/components/shell/useRole";
 import { ThemeToggle } from "@/components/shell/ThemeToggle";
+import { BrandLogo } from "@/components/kit/BrandLogo";
 
 type TopBarProps = {
   /** Shown on the rewards chip. */
@@ -33,11 +34,8 @@ export function TopBar({
       className="sticky top-0 z-40 h-14 border-b border-border bg-card shadow-xs sm:h-16"
     >
       <div className="mx-auto flex h-full max-w-[var(--page-max)] items-center gap-3 px-3 sm:px-4">
-        <Link href="/" className="flex shrink-0 items-center gap-2" aria-label="Fannero home">
-          <span className="flex size-8 items-center justify-center rounded-[10px] bg-primary text-primary-foreground">
-            <Star weight="fill" size={18} />
-          </span>
-          <span className="text-[20px] font-extrabold tracking-[-0.025em]">Fannero</span>
+        <Link href="/" className="shrink-0" aria-label="Fannero home">
+          <BrandLogo size={32} />
         </Link>
 
         {/* Desktop pill nav. The bottom tab bar takes over below 900px. */}

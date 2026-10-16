@@ -35,6 +35,10 @@
   --color-ring: var(--ring);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-link: var(--link);
 
   /* Ramps, for the few places a specific step is called for (hero tiles,
@@ -88,6 +92,13 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    /* Tells the browser to render its own controls — date pickers,
+       scrollbars, autofill — to match the theme we've picked. */
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   body {

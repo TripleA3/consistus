@@ -30,6 +30,14 @@
 
   --destructive: #e5484d;
   --destructive-foreground: #ffffff;
+
+  /* Status tints. Success borrows the lime ramp; warning is the one amber
+     in the system, shared with the confetti burst. */
+  --success: var(--lime-100);
+  --success-foreground: #3d5200;
+  --warning: #fff2cc;
+  --warning-foreground: #7a4e00;
+
   --link: var(--indigo-700);
 
   /* Indigo-tinted elevation. Cards xs, raised sections sm, menus lg. */
@@ -66,5 +74,11 @@
 
   --destructive: #ff6b70;
   --destructive-foreground: var(--ink-950);
+
+  /* Tints go dark-on-dark: a light chip would glare on an ink surface. */
+  --success: rgba(213, 253, 71, 0.16);
+  --success-foreground: var(--lime-400);
+  --warning: rgba(255, 176, 32, 0.18);
+  --warning-foreground: #ffc45c;
   --link: var(--indigo-300);
 }

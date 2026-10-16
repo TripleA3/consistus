@@ -325,3 +325,35 @@ credit (linked back through the `related_request_id` column that already
 existed for this) and adds the amount to `wallet_balances`, in the same
 transaction as the status change. Guarded on the status having actually
 changed, so re-confirming a completed request can't pay twice.
+
+## The new component kit lives beside the old one, not on top of it
+
+The redesign's components are in `src/components/kit`, not in the existing
+`src/components/ui`. The two sets share names (Button, Chip, Input, Card)
+but almost nothing else: the new Button's variants are cta / primary /
+secondary / outline / ghost / icon, where the old one's were primary /
+accent / outline / outline-light / ghost / neutral, and the old set reads
+tokens (`text-ink`, `shadow-button`, `border-card-border`) that the new
+palette doesn't define.
+
+Clobbering `ui/` would have meant rewriting the imports in 35 files whose
+screens are being rebuilt from the new design anyway — throwaway work that
+also leaves the tree broken in between. So `ui/` stays where it is and is
+deleted a screen at a time, as each screen moves to `kit/`. Nothing new
+should import from `ui/`.
+
+Those old screens already render with the wrong colours, since the tokens
+under them changed with the palette. That's expected until they're rebuilt.
+
+## Status tints are tokens, not hex in a component
+
+`StatusPill` first carried its success and warning colours inline. In dark
+mode that put a pale lime and a pale cream chip on an ink surface, which
+glared. `--success`, `--success-foreground`, `--warning` and
+`--warning-foreground` now live in `semantic.css` with dark overrides that
+drop to a low-alpha tint with a bright label, the same way `--destructive`
+already worked.
+
+`color-scheme` is also set on `html` now, so the browser's own date
+picker, scrollbars and autofill follow the theme — the calendar glyph in a
+`datetime-local` field was invisible on dark before.
