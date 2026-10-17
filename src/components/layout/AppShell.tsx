@@ -1,20 +1,23 @@
 import type { ReactNode } from "react";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { MobileTabBar } from "@/components/layout/MobileTabBar";
+import { AppShell as Shell } from "@/components/shell/AppShell";
 
 type AppShellProps = {
   children: ReactNode;
+  /**
+   * The old shell highlighted the active nav item from this prop. The new
+   * one reads the pathname itself, so it's accepted and ignored while the
+   * screens that still pass it are rebuilt.
+   */
   activePath?: string;
 };
 
-export function AppShell({ children, activePath }: AppShellProps) {
-  return (
-    <div className="flex min-h-screen flex-col">
-      <Header activePath={activePath} />
-      <main className="flex-1 pb-16 md:pb-0">{children}</main>
-      <Footer />
-      <MobileTabBar activePath={activePath} />
-    </div>
-  );
+/**
+ * Adapter so every screen still importing the old shell gets the new one:
+ * role-aware top bar, frosted bottom tabs and the Create FAB.
+ *
+ * Screens move to `@/components/shell/AppShell` as they're rebuilt, and
+ * this file goes when the last one has.
+ */
+export function AppShell({ children }: AppShellProps) {
+  return <Shell>{children}</Shell>;
 }

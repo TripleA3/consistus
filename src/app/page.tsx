@@ -1,28 +1,33 @@
-import Link from "next/link";
-import { AppShell } from "@/components/layout/AppShell";
-import { HeroBanner } from "@/components/shared/HeroBanner";
-import { CategoryChips } from "@/components/home/CategoryChips";
-import { CelebrityCard } from "@/components/home/CelebrityCard";
-import { EventCard } from "@/components/home/EventCard";
-import { VideoRequestCard } from "@/components/home/VideoRequestCard";
-import { HowItWorks } from "@/components/home/HowItWorks";
+import { CalendarBlank, Sparkle, VideoCamera } from "@phosphor-icons/react/dist/ssr";
+import {
+  ButtonLink,
+  Chip,
+  ChipRow,
+  EmptyState,
+  PageHeader,
+  Section,
+} from "@/components/kit";
+import { AppShell } from "@/components/shell/AppShell";
+import { EventCard } from "@/components/cards/EventCard";
+import { TalentCard } from "@/components/cards/TalentCard";
 import { fetchEvents } from "@/lib/api/events";
 import { fetchTalentUsers } from "@/lib/api/talents";
 
-const talentCategories = [
+const TALENT_CATEGORIES = [
   { value: "all", label: "All" },
-  { value: "artist", label: "Artist" },
+  { value: "artist", label: "Artists" },
   { value: "actor", label: "Actors" },
   { value: "comedian", label: "Comedians" },
   { value: "techie", label: "Techies" },
+  { value: "athlete", label: "Athletes" },
 ];
 
-const eventCategories = [
-  { value: "all", label: "All Events" },
+const EVENT_CATEGORIES = [
+  { value: "all", label: "All events" },
   { value: "concerts", label: "Concerts" },
   { value: "nightlife", label: "Nightlife" },
-  { value: "tech-and-gaming", label: "Tech & Gaming" },
-  { value: "food-and-drinks", label: "Food & Drinks" },
+  { value: "tech-and-gaming", label: "Tech & gaming" },
+  { value: "food-and-drinks", label: "Food & drinks" },
   { value: "networking", label: "Networking" },
 ];
 
@@ -35,72 +40,97 @@ const eventCategories = [
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [events, talentUsers] = await Promise.all([
-    fetchEvents(),
-    fetchTalentUsers(),
-  ]);
+  const [events, talentUsers] = await Promise.all([fetchEvents(), fetchTalentUsers()]);
+  const talents = talentUsers.filter((talent) => talent.talentProfile);
 
   return (
-    <AppShell activePath="/">
-      <div className="mx-auto flex max-w-7xl flex-col gap-16 px-4 pb-20 sm:px-8">
-        <HeroBanner />
+    <AppShell>
+      <PageHeader
+        title="Find your"
+        accent="people"
+        subtitle="Book a shoutout, grab a ticket, show up."
+      />
 
-        <section className="flex flex-col gap-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-text">Top Celebrities</h2>
-          </div>
-          <CategoryChips categories={talentCategories} />
-          {talentUsers.length === 0 ? (
-            <EmptyState message="No talent to show yet. Check back soon." />
-          ) : (
-            <div className="flex gap-3.5 overflow-x-auto pb-2">
-              {talentUsers.map((talent) =>
-                talent.talentProfile ? (
-                  <CelebrityCard key={talent.id} talent={talent} profile={talent.talentProfile} />
-                ) : null,
-              )}
-            </div>
-          )}
-        </section>
+      <Section
+        title="Top celebrities"
+        subtitle="Book a video or an appearance"
+      >
+        <ChipRow label="Filter talent by category" className="mb-3.5">
+          {TALENT_CATEGORIES.map((category, index) => (
+            <Chip key={category.value} selected={index === 0}>
+              {category.label}
+            </Chip>
+          ))}
+        </ChipRow>
 
-        <section className="flex flex-col gap-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-text">Don&apos;t Miss These Events</h2>
-            <Link href="/events" className="text-base font-semibold text-[#3a3a3a] hover:text-ink">
-              See more
-            </Link>
-          </div>
-          <CategoryChips categories={eventCategories} />
-          {events.length === 0 ? (
-            <EmptyState message="No events scheduled right now." />
-          ) : (
-            <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-4">
-              {events.map((event) => (
-                <EventCard key={event.id} event={event} />
-              ))}
-            </div>
-          )}
-        </section>
-
-        <section className="flex flex-col gap-6">
-          <h2 className="text-2xl font-bold text-text">Event Video Request</h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {talentUsers.map((talent) => (
-              <VideoRequestCard key={talent.id} talent={talent} />
+        {talents.length === 0 ? (
+          <EmptyState
+            icon={<Sparkle size={26} />}
+            title="No talent yet"
+            body="Celebrities you can book will show up here."
+          />
+        ) : (
+          // -gutter margins let the rail run to the screen edge on a phone.
+          <div className="-mx-[var(--gutter)] flex gap-3 overflow-x-auto px-[var(--gutter)] pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {talents.map((talent) => (
+              <TalentCard key={talent.id} talent={talent} profile={talent.talentProfile!} />
             ))}
           </div>
-        </section>
+        )}
+      </Section>
 
-        <HowItWorks />
-      </div>
+      <Section
+        title="Don't miss these"
+        subtitle="Events happening near you"
+        action={{ label: "See all", href: "/events" }}
+      >
+        <ChipRow label="Filter events by category" className="mb-3.5">
+          {EVENT_CATEGORIES.map((category, index) => (
+            <Chip key={category.value} selected={index === 0}>
+              {category.label}
+            </Chip>
+          ))}
+        </ChipRow>
+
+        {events.length === 0 ? (
+          <EmptyState
+            icon={<CalendarBlank size={26} />}
+            title="No events scheduled"
+            body="When something is announced, it lands here first."
+          />
+        ) : (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {events.map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))}
+          </div>
+        )}
+      </Section>
+
+      <Section title="Request a video" subtitle="A personal message, from them to you">
+        {talents.length === 0 ? (
+          <EmptyState
+            icon={<VideoCamera size={26} />}
+            title="Nobody taking requests yet"
+            body="Personalised videos open up as talent join."
+          />
+        ) : (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {talents.slice(0, 8).map((talent) => (
+              <ButtonLink
+                key={talent.id}
+                href={`/talent/${talent.id}/request/video`}
+                variant="outline"
+                size="lg"
+                className="justify-between bg-card px-4"
+                trailing={<VideoCamera size={18} weight="bold" />}
+              >
+                <span className="truncate">{talent.name}</span>
+              </ButtonLink>
+            ))}
+          </div>
+        )}
+      </Section>
     </AppShell>
-  );
-}
-
-function EmptyState({ message }: { message: string }) {
-  return (
-    <div className="rounded-xl border border-dashed border-card-border p-8 text-center text-sm text-slate-500">
-      {message}
-    </div>
   );
 }
