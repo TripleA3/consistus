@@ -7,6 +7,8 @@ type SegmentedProps<T extends string> = {
   value: T;
   onChange: (value: T) => void;
   label: string;
+  /** Fills the container, with each option taking an equal share. */
+  block?: boolean;
   className?: string;
 };
 
@@ -20,13 +22,16 @@ export function Segmented<T extends string>({
   value,
   onChange,
   label,
+  block = false,
   className = "",
 }: SegmentedProps<T>) {
   return (
     <div
       role="radiogroup"
       aria-label={label}
-      className={`inline-flex items-center gap-1 rounded-pill bg-muted p-1 ${className}`}
+      className={`items-center gap-1 rounded-pill bg-muted p-1 ${
+        block ? "flex w-full" : "inline-flex"
+      } ${className}`}
     >
       {options.map((option) => {
         const selected = option.value === value;
@@ -38,6 +43,8 @@ export function Segmented<T extends string>({
             aria-checked={selected}
             onClick={() => onChange(option.value)}
             className={`h-9 rounded-pill px-4 text-label-lg transition-colors ${
+              block ? "flex-1" : ""
+            } ${
               selected
                 ? "bg-card text-foreground shadow-xs"
                 : "text-muted-foreground hover:text-foreground"

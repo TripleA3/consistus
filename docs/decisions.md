@@ -386,3 +386,27 @@ drops to a low-alpha tint behind a bright label. The pill reads those.
 `color-scheme` is also set on `html` now, so the browser's own date
 picker, scrollbars and autofill follow the theme — the calendar glyph in a
 `datetime-local` field was invisible on dark before.
+
+## Sign up and sign in are one screen from the design
+
+`Fanero-Onboarding.dc.html` puts both on a single screen with a Sign up /
+Sign in switch at the top, so `/sign-up` and `/sign-in` are now two modes
+of one `AuthScreen` component. Each keeps its own URL — the switch
+navigates rather than swapping state — because the rest of the app links
+to both, and a shared link should open on the right tab.
+
+The design drops the fan/talent choice that the old sign-up form had,
+along with the category and bio fields: its subtitle is "One account for
+fans, celebrities and organisers." Everyone is created as a fan and adds
+a talent profile afterwards at `/talent/onboarding`, which already exists
+and already collects those fields. No capability is lost; the step moves.
+
+Google and Apple are rendered because the design shows them, but nothing
+is wired behind them yet — there is no OAuth provider in the project. They
+are inert until real auth lands, which is tracked in open-questions.
+
+One deliberate deviation: the design file is a print of a vertically
+centred layout, so the brand mark sits just above the form block rather
+than at the top of the page. Pinning it top-left instead keeps it from
+floating in the middle of a tall window, and matches where it sits on a
+phone, where the content fills the screen anyway.
