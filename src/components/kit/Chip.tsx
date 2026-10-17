@@ -16,7 +16,7 @@ type ChipProps = {
 };
 
 const BASE =
-  "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-pill px-3.5 text-caption font-bold " +
+  "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-pill px-3.5 text-label-lg " +
   "transition-colors";
 
 /** A filter or category pill. Rows of them go in a ChipRow. */

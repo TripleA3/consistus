@@ -1,28 +1,52 @@
 /*
- * Type scale. Fluid roles use clamp so headings settle between phone and
- * desktop without breakpoints. Headings carry -0.025em tracking.
+ * From the design handoff, verbatim but for the font stacks: next/font
+ * loads the three families and exposes them as variables, which go in
+ * front of the handoff's own names.
  */
 :root {
-  --font-sans: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
-  /* Italic only, one accent word per hero headline. */
-  --font-accent: var(--font-instrument-serif), ui-serif, Georgia, serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-sans: var(--font-plus-jakarta-sans), 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-accent: var(--font-instrument-serif), 'Instrument Serif', Georgia, serif; /* italic only — one highlighted word per headline */
+  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', ui-monospace, monospace; /* DNS records, codes, tabular data */
 
-  --display-sm: clamp(1.875rem, 1.5rem + 1.6vw, 2.25rem);
-  --display-sm-weight: 700;
-  --display-sm-leading: 1.2;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
 
-  --headline-lg: clamp(1.625rem, 1.35rem + 1.2vw, 2rem);
-  --headline-md: clamp(1.5rem, 1.3rem + 0.85vw, 1.75rem);
-  --headline-sm: 1.5rem;
+  /* Legacy scale (kept for existing screens) */
+  --text-display: clamp(2.25rem, 1.6rem + 3vw, 4rem);
+  --text-h1: clamp(1.875rem, 1.45rem + 2vw, 3rem);
+  --text-h2: clamp(1.5rem, 1.25rem + 1.1vw, 2.25rem);
+  --text-h3: clamp(1.25rem, 1.12rem + 0.55vw, 1.625rem);
+  --text-h4: 1.125rem;
+  --text-lg: 1.0625rem;
+  --text-md: 0.9375rem;
+  --text-sm: 0.8125rem;
+  --text-xs: 0.6875rem;
 
-  --title-lg: 1.375rem;
-  --title-md: 1rem;
+  /* Material 3 type roles — display/headline are fluid (mobile → desktop) */
+  --display-lg-size: clamp(2.5rem, 1.7rem + 3.4vw, 3.5625rem);  --display-lg-line: 1.12; --display-lg-weight: 700;
+  --display-md-size: clamp(2.125rem, 1.6rem + 2.4vw, 2.8125rem); --display-md-line: 1.15; --display-md-weight: 700;
+  --display-sm-size: clamp(1.875rem, 1.5rem + 1.6vw, 2.25rem);   --display-sm-line: 1.2;  --display-sm-weight: 700;
+  --headline-lg-size: clamp(1.625rem, 1.4rem + 1vw, 2rem);       --headline-lg-line: 1.25; --headline-lg-weight: 700;
+  --headline-md-size: clamp(1.5rem, 1.35rem + 0.6vw, 1.75rem);   --headline-md-line: 1.28; --headline-md-weight: 700;
+  --headline-sm-size: 1.5rem;   --headline-sm-line: 1.33; --headline-sm-weight: 600;
+  --title-lg-size: 1.375rem;    --title-lg-line: 1.27;    --title-lg-weight: 600;
+  --title-md-size: 1rem;        --title-md-line: 1.5;     --title-md-weight: 600;
+  --title-sm-size: 0.875rem;    --title-sm-line: 1.43;    --title-sm-weight: 600;
+  --body-lg-size: 1rem;         --body-lg-line: 1.5;      --body-lg-weight: 400;
+  --body-md-size: 0.875rem;     --body-md-line: 1.43;     --body-md-weight: 400;
+  --body-sm-size: 0.75rem;      --body-sm-line: 1.33;     --body-sm-weight: 400;
+  --label-lg-size: 0.875rem;    --label-lg-line: 1.43;    --label-lg-weight: 700;
+  --label-md-size: 0.75rem;     --label-md-line: 1.33;    --label-md-weight: 700;
+  --label-sm-size: 0.6875rem;   --label-sm-line: 1.45;    --label-sm-weight: 700;
 
-  --body: 0.9375rem; /* 15px */
-  --caption: 0.8125rem; /* 13px */
-  --micro: 0.6875rem; /* 11px, 700 */
-  --micro-lg: 0.75rem; /* 12px, 700 */
-
-  --tracking-heading: -0.025em;
+  --leading-tight: 1.08;
+  --leading-snug: 1.25;
+  --leading-body: 1.55;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
 }
+
+html { font-family: var(--font-sans); color: var(--foreground); -webkit-font-smoothing: antialiased; }

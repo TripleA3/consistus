@@ -72,12 +72,12 @@ export function DropdownMenu({
           id={id}
           role="menu"
           aria-label={label}
-          className={`absolute top-[calc(100%+4px)] z-50 min-w-48 overflow-hidden rounded-card border border-border bg-card py-1 shadow-lg ${
+          className={`absolute top-[calc(100%+4px)] z-[var(--z-dropdown)] min-w-48 overflow-hidden rounded-lg border border-border bg-popover py-1 text-popover-foreground shadow-lg ${
             align === "end" ? "right-0" : "left-0"
           }`}
         >
           {items.map((item) => {
-            const classes = `flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-body font-bold hover:bg-accent ${
+            const classes = `flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-body-lg font-bold hover:bg-accent ${
               item.danger ? "text-destructive" : "text-foreground"
             }`;
 

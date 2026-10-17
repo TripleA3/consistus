@@ -29,7 +29,7 @@ export function Stepper({ steps, current, className = "" }: StepperProps) {
             className={`flex items-center gap-2 ${index === steps.length - 1 ? "" : "flex-1"}`}
           >
             <span
-              className={`flex size-7 shrink-0 items-center justify-center rounded-pill text-caption font-extrabold ${
+              className={`flex size-7 shrink-0 items-center justify-center rounded-pill text-label-md ${
                 done
                   ? "bg-primary text-primary-foreground"
                   : active
@@ -41,7 +41,7 @@ export function Stepper({ steps, current, className = "" }: StepperProps) {
             </span>
 
             <span
-              className={`hidden shrink-0 text-caption font-bold min-[480px]:inline ${
+              className={`hidden shrink-0 text-label-lg min-[480px]:inline ${
                 active ? "text-foreground" : "text-muted-foreground"
               }`}
             >

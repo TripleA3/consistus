@@ -31,7 +31,7 @@ export function Field({
 
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
-      <label htmlFor={htmlFor} className="text-caption font-bold text-foreground">
+      <label htmlFor={htmlFor} className="text-label-lg text-foreground">
         {label}
         {required ? (
           <span aria-hidden className="ml-0.5 text-destructive">
@@ -46,7 +46,7 @@ export function Field({
         <p
           id={`${htmlFor}-message`}
           role={error ? "alert" : undefined}
-          className={`text-caption ${error ? "text-destructive" : "text-muted-foreground"}`}
+          className={`text-body-md ${error ? "text-destructive" : "text-muted-foreground"}`}
         >
           {message}
         </p>

@@ -1,44 +1,65 @@
-/*
- * Brand ramps. Raw values — components must never read these directly,
- * only the semantic roles in semantic.css.
- *
- * Anchors marked ✓ are exact values given in the handoff (README token
- * table + BUILD-SPEC §2, which names the ramp step behind every semantic
- * role). The remaining steps are interpolated to keep the ramps complete;
- * replace this file verbatim with design/tokens/colors.css when it lands.
- */
 :root {
-  /* Indigo — brand */
-  --indigo-50: #f3f4ff; /* ✓ accent (light), foreground (dark) */
-  --indigo-100: #eef1ff; /* ✓ background (light) */
-  --indigo-200: #dcdcff; /* ✓ secondary (light) */
-  --indigo-300: #bfbffe; /* ✓ primary (dark) */
-  --indigo-400: #9d9bf0; /* interpolated */
-  --indigo-500: #7b7dec; /* interpolated — also a confetti colour */
-  --indigo-600: #5a57dc; /* ✓ ring (light) */
-  --indigo-700: #3f38c4; /* ✓ link (light) */
-  --indigo-800: #312cab; /* ✓ secondary (dark) */
-  --indigo-900: #25229c; /* ✓ primary (light) */
-  --indigo-950: #1a1770; /* ✓ cta-foreground */
+  /* Indigo — brand primary (logo, banners, dark cards) */
+  --indigo-50: #f3f4ff;
+  --indigo-100: #eef1ff;
+  --indigo-200: #dcdcff;
+  --indigo-300: #bfbffe;
+  --indigo-400: #9c9df5;
+  --indigo-500: #7b7dec;
+  --indigo-600: #5a57dc;
+  --indigo-700: #3f38c4;
+  --indigo-800: #312cab;
+  --indigo-900: #25229c;
+  --indigo-950: #1a1770;
 
-  /* Lime — CTA */
-  --lime-100: #f4ffcf; /* ✓ */
-  --lime-200: #e9ff9e; /* interpolated */
-  --lime-300: #dfff73; /* interpolated */
-  --lime-400: #d5fd47; /* ✓ cta */
-  --lime-500: #b9e02f; /* interpolated */
-  --lime-600: #9dc318; /* ✓ */
+  /* Lime — accent (CTAs, highlights, add buttons) */
+  --lime-100: #f4ffcf;
+  --lime-200: #ebfe9a;
+  --lime-300: #dffd6b;
+  --lime-400: #d5fd47;
+  --lime-500: #c2ec2c;
+  --lime-600: #9dc318;
 
-  /* Ink — neutrals */
-  --ink-100: #f5f5fa; /* ✓ muted (light) */
-  --ink-200: #e4e4f0; /* ✓ border (light) */
-  --ink-300: #c6c5dc; /* ✓ input (light) */
-  --ink-400: #9594b3; /* ✓ muted-foreground (dark) */
-  --ink-500: #6b6a8f; /* ✓ muted-foreground (light) */
-  --ink-600: #4f4e73; /* interpolated */
-  --ink-700: #34335c; /* ✓ input (dark) */
-  --ink-800: #28275a; /* ✓ border (dark) */
-  --ink-850: #1c1b4a; /* ✓ muted / accent (dark) */
-  --ink-900: #14133a; /* ✓ card (dark), foreground (light) */
-  --ink-950: #0d0c28; /* ✓ background (dark) */
+  /* Neutrals (cool-tinted) */
+  --white: #ffffff;
+  --ink-950: #0d0c28;
+  --ink-900: #14133a;
+  --ink-850: #1c1b4a;
+  --ink-800: #28275a;
+  --ink-700: #34335c;
+  --ink-500: #6b6a8f;
+  --ink-400: #9594b3;
+  --ink-300: #c6c5dc;
+  --ink-200: #e4e4f0;
+  --ink-100: #f5f5fa;
+
+  /* Semantic states */
+  --success-500: #22a06b;
+  --warning-500: #f5a524;
+  --warning-700: #9a5b00;
+  --danger-500: #e5484d;
+  --success-100: #e3f7ee;
+  --warning-100: #fff3dc;
+  --danger-100: #fde7e8;
+
+  /* Semantic aliases */
+  --bg-canvas: var(--indigo-500);
+  --bg-app: var(--indigo-100);
+  --surface-card: var(--white);
+  --surface-card-muted: var(--indigo-50);
+  --surface-brand: var(--indigo-900);
+  --surface-brand-soft: var(--indigo-300);
+  --surface-accent: var(--lime-400);
+
+  --text-strong: var(--ink-900);
+  --text-body: var(--ink-700);
+  --text-muted: var(--ink-500);
+  --text-brand: var(--indigo-900);
+  --text-on-brand: var(--white);
+  --text-on-accent: var(--indigo-950);
+
+  --border-subtle: var(--ink-200);
+  --border-default: var(--ink-300);
+  --border-brand: var(--indigo-800);
+  --focus-ring: var(--lime-400);
 }

@@ -4,6 +4,7 @@
 @import "../styles/tokens/semantic.css";
 @import "../styles/tokens/typography.css";
 @import "../styles/tokens/spacing.css";
+@import "../styles/tokens/layout.css";
 @import "../styles/tokens/mobile.css";
 @import "../styles/motion.css";
 
@@ -14,12 +15,17 @@
  */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Expose the semantic roles to Tailwind utilities (bg-card, text-muted-foreground, …). */
+/*
+ * Exposes the handoff's tokens to Tailwind utilities. Components read
+ * these names only — never a ramp step, a raw hex or a pixel radius.
+ */
 @theme inline {
   --color-background: var(--background);
+  --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-  --color-foreground: var(--foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-primary: var(--primary);
@@ -33,30 +39,30 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-link: var(--link);
+  --color-scrim: var(--scrim);
+
+  /* States. The -soft tints are backgrounds; the solid role is the label. */
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-danger-soft: var(--danger-soft);
   --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
+  --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
   --color-warning-foreground: var(--warning-foreground);
-  --color-link: var(--link);
 
-  /* Ramps, for the few places a specific step is called for (hero tiles,
-     stripe placeholders, confetti) — prefer the roles above. */
+  /* Ramp steps, for the few places a specific one is called for — the
+     striped cover, the brand tile, the confetti burst. */
   --color-indigo-50: var(--indigo-50);
   --color-indigo-100: var(--indigo-100);
   --color-indigo-200: var(--indigo-200);
   --color-indigo-300: var(--indigo-300);
-  --color-indigo-600: var(--indigo-600);
   --color-indigo-800: var(--indigo-800);
   --color-indigo-900: var(--indigo-900);
   --color-indigo-950: var(--indigo-950);
-  --color-lime-100: var(--lime-100);
   --color-lime-400: var(--lime-400);
-  --color-lime-600: var(--lime-600);
   --color-ink-100: var(--ink-100);
-  --color-ink-400: var(--ink-400);
-  --color-ink-500: var(--ink-500);
   --color-ink-850: var(--ink-850);
   --color-ink-900: var(--ink-900);
   --color-ink-950: var(--ink-950);
@@ -65,28 +71,76 @@
   --font-accent: var(--font-accent);
   --font-mono: var(--font-mono);
 
-  --text-display-sm: var(--display-sm);
-  --text-headline-lg: var(--headline-lg);
-  --text-headline-md: var(--headline-md);
-  --text-headline-sm: var(--headline-sm);
-  --text-title-lg: var(--title-lg);
-  --text-title-md: var(--title-md);
-  --text-body: var(--body);
-  --text-caption: var(--caption);
-  --text-micro: var(--micro);
+  /* Each type role carries its own leading and weight, so `text-title-lg`
+     alone is the whole treatment. */
+  --text-display-lg: var(--display-lg-size);
+  --text-display-lg--line-height: var(--display-lg-line);
+  --text-display-lg--font-weight: var(--display-lg-weight);
+  --text-display-md: var(--display-md-size);
+  --text-display-md--line-height: var(--display-md-line);
+  --text-display-md--font-weight: var(--display-md-weight);
+  --text-display-sm: var(--display-sm-size);
+  --text-display-sm--line-height: var(--display-sm-line);
+  --text-display-sm--font-weight: var(--display-sm-weight);
 
+  --text-headline-lg: var(--headline-lg-size);
+  --text-headline-lg--line-height: var(--headline-lg-line);
+  --text-headline-lg--font-weight: var(--headline-lg-weight);
+  --text-headline-md: var(--headline-md-size);
+  --text-headline-md--line-height: var(--headline-md-line);
+  --text-headline-md--font-weight: var(--headline-md-weight);
+  --text-headline-sm: var(--headline-sm-size);
+  --text-headline-sm--line-height: var(--headline-sm-line);
+  --text-headline-sm--font-weight: var(--headline-sm-weight);
+
+  --text-title-lg: var(--title-lg-size);
+  --text-title-lg--line-height: var(--title-lg-line);
+  --text-title-lg--font-weight: var(--title-lg-weight);
+  --text-title-md: var(--title-md-size);
+  --text-title-md--line-height: var(--title-md-line);
+  --text-title-md--font-weight: var(--title-md-weight);
+  --text-title-sm: var(--title-sm-size);
+  --text-title-sm--line-height: var(--title-sm-line);
+  --text-title-sm--font-weight: var(--title-sm-weight);
+
+  --text-body-lg: var(--body-lg-size);
+  --text-body-lg--line-height: var(--body-lg-line);
+  --text-body-md: var(--body-md-size);
+  --text-body-md--line-height: var(--body-md-line);
+  --text-body-sm: var(--body-sm-size);
+  --text-body-sm--line-height: var(--body-sm-line);
+
+  --text-label-lg: var(--label-lg-size);
+  --text-label-lg--line-height: var(--label-lg-line);
+  --text-label-lg--font-weight: var(--label-lg-weight);
+  --text-label-md: var(--label-md-size);
+  --text-label-md--line-height: var(--label-md-line);
+  --text-label-md--font-weight: var(--label-md-weight);
+  --text-label-sm: var(--label-sm-size);
+  --text-label-sm--line-height: var(--label-sm-line);
+  --text-label-sm--font-weight: var(--label-sm-weight);
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
   --radius-pill: var(--radius-pill);
-  --radius-input: var(--radius-input);
-  --radius-row: var(--radius-row);
-  --radius-tile: var(--radius-tile);
-  --radius-card: var(--radius-card);
-  --radius-section: var(--radius-section);
-  --radius-hero: var(--radius-hero);
 
   --shadow-xs: var(--shadow-xs);
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
+
+  --ease-out: var(--ease-out);
+  --ease-standard: var(--ease-standard);
+  --ease-emphasized: var(--ease-emphasized);
+
+  --z-index-sticky: var(--z-sticky);
+  --z-index-dropdown: var(--z-dropdown);
+  --z-index-overlay: var(--z-overlay);
+  --z-index-toast: var(--z-toast);
+  --z-index-tooltip: var(--z-tooltip);
 }
 
 @layer base {
@@ -105,7 +159,8 @@
     background: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
-    font-size: var(--body);
+    font-size: var(--body-lg-size);
+    line-height: var(--body-lg-line);
     /* Theme switches shouldn't snap. */
     transition: background-color 0.2s ease;
   }
@@ -114,8 +169,7 @@
   h2,
   h3,
   h4 {
-    letter-spacing: var(--tracking-heading);
-    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
   }
 
   /* One focus treatment everywhere, per the interaction spec. */
@@ -126,7 +180,7 @@
 
   [disabled],
   [aria-disabled="true"] {
-    opacity: 0.45;
+    opacity: var(--state-disabled);
   }
 
   /* The striped cover used wherever a real image hasn't been supplied. */

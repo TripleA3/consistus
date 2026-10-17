@@ -179,14 +179,15 @@ a[data-pill]:hover::after {
   inset: 0;
   border-radius: inherit;
   background: currentColor;
-  opacity: 0.12;
+  /* Material 3 state layers, from the handoff's spacing tokens. */
+  opacity: var(--state-hover);
   pointer-events: none;
 }
 
 button:not(:disabled):active::after,
 [role="button"]:not([aria-disabled="true"]):active::after,
 a[data-pill]:active::after {
-  opacity: 0.2;
+  opacity: var(--state-pressed);
 }
 
 /*

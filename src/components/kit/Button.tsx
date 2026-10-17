@@ -33,9 +33,9 @@ const VARIANTS: Record<ButtonVariant, string> = {
 };
 
 const SIZES: Record<ButtonSize, string> = {
-  sm: "h-9 px-4 text-caption",
-  md: "h-11 px-5 text-body",
-  lg: "h-[52px] px-6 text-body",
+  sm: "h-9 px-4 text-label-md",
+  md: "h-11 px-5 text-label-lg",
+  lg: "h-[52px] px-6 text-body-lg",
 };
 
 /** Icon buttons are square, so they take a width rather than padding. */

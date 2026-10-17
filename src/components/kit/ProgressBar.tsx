@@ -26,7 +26,7 @@ export function ProgressBar({
   return (
     <div className={className}>
       {caption ? (
-        <div className="mb-1.5 flex items-center justify-between gap-2 text-caption">
+        <div className="mb-1.5 flex items-center justify-between gap-2 text-body-md">
           <span className="font-bold text-foreground">{caption}</span>
           <span className="tabular-nums text-muted-foreground">{pct}%</span>
         </div>

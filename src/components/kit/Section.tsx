@@ -32,7 +32,7 @@ export function Section({
         <div className="min-w-0">
           <h2 className="truncate text-title-lg">{title}</h2>
           {subtitle ? (
-            <p className="mt-0.5 text-caption text-muted-foreground">{subtitle}</p>
+            <p className="mt-0.5 text-body-md text-muted-foreground">{subtitle}</p>
           ) : null}
         </div>
 
@@ -40,7 +40,7 @@ export function Section({
           (action ? (
             <Link
               href={action.href}
-              className="shrink-0 text-caption font-bold text-link hover:underline"
+              className="shrink-0 text-label-lg text-link hover:underline"
             >
               {action.label}
             </Link>

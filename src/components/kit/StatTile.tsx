@@ -26,13 +26,13 @@ export function StatTile({
 }: StatTileProps) {
   return (
     <div
-      className={`rounded-tile p-4 ${
+      className={`rounded-lg p-4 ${
         highlight ? "bg-cta text-cta-foreground" : "bg-card text-card-foreground shadow-xs"
       } ${className}`}
     >
       <div className="flex items-center justify-between gap-2">
         <span
-          className={`text-caption font-bold ${
+          className={`text-label-lg ${
             highlight ? "opacity-70" : "text-muted-foreground"
           }`}
         >
@@ -41,12 +41,12 @@ export function StatTile({
         {icon ? <span className={highlight ? "opacity-70" : "text-muted-foreground"}>{icon}</span> : null}
       </div>
 
-      <p data-count className="mt-1.5 text-headline-sm font-extrabold tabular-nums">
+      <p data-count className="mt-1.5 text-headline-sm tabular-nums">
         {value}
       </p>
 
       {note ? (
-        <p className={`mt-0.5 text-caption ${highlight ? "opacity-70" : "text-muted-foreground"}`}>
+        <p className={`mt-0.5 text-body-md ${highlight ? "opacity-70" : "text-muted-foreground"}`}>
           {note}
         </p>
       ) : null}

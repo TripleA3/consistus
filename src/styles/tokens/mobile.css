@@ -1,33 +1,58 @@
 /*
- * Phone rules. Mobile is the primary target, so these are overrides of the
- * desktop defaults rather than the other way round.
+ * App-like mobile layer, under 640px.
+ *
+ * The handoff's mobile.css targets the prototype's inline styles
+ * (`main[style]`, `[style*="padding:24px"]`). Those selectors can't match
+ * a Tailwind build, so this keeps the handoff's values and intent and
+ * expresses them against our own markup: the gutter token, `main`, and
+ * the `data-chip-row` attribute the ChipRow component sets.
  */
-@media (max-width: 639px) {
+html,
+body {
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  /* Clears the sticky top bar when an anchor is jumped to. */
+  scroll-padding-top: 64px;
+}
+
+@media (max-width: 640px) {
+  body {
+    overscroll-behavior-y: none;
+  }
+
   :root {
     --gutter: 12px;
-    --radius-section: 20px;
+    --section-gap: var(--space-4);
   }
 
-  /* Clears the bottom tab bar plus the home indicator. */
+  /* Clears the bottom tab bar and the home indicator. */
   main {
-    padding: 12px 12px calc(104px + env(safe-area-inset-bottom));
+    padding-bottom: calc(104px + env(safe-area-inset-bottom));
   }
 
-  h1 {
+  main h1 {
     font-size: 1.5rem;
+    line-height: 1.2;
   }
 
-  h2 {
+  main h2 {
     font-size: 1.0625rem;
   }
 
-  /* Chip and filter rows run off the edge as one scrolling line. */
+  /* Chip and tab rows scroll sideways rather than stacking into tall blocks. */
   [data-chip-row] {
     flex-wrap: nowrap;
     overflow-x: auto;
     scrollbar-width: none;
     margin-inline: calc(var(--gutter) * -1);
     padding-inline: var(--gutter);
+  }
+
+  [data-chip-row] > * {
+    flex: none;
   }
 
   [data-chip-row]::-webkit-scrollbar {
@@ -39,5 +64,10 @@
   textarea,
   select {
     font-size: 16px;
+  }
+
+  button,
+  a {
+    touch-action: manipulation;
   }
 }

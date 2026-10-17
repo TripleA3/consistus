@@ -31,7 +31,7 @@ export function TopBar({
   return (
     <header
       data-header
-      className="sticky top-0 z-40 h-14 border-b border-border bg-card shadow-xs sm:h-16"
+      className="sticky top-0 z-[var(--z-sticky)] h-14 border-b border-border bg-card shadow-xs sm:h-16"
     >
       <div className="mx-auto flex h-full max-w-[var(--page-max)] items-center gap-3 px-3 sm:px-4">
         <Link href="/" className="shrink-0" aria-label="Fannero home">

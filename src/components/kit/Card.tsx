@@ -15,7 +15,7 @@ type CardProps = {
  * hover via the motion layer; add `data-no-lift` to opt a card out.
  */
 export function Card({ children, href, flush = false, className = "" }: CardProps) {
-  const classes = `block overflow-hidden rounded-card bg-card text-card-foreground shadow-xs ${
+  const classes = `block overflow-hidden rounded-lg bg-card text-card-foreground shadow-xs ${
     flush ? "" : "p-4"
   } ${className}`;
 

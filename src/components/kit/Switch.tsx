@@ -29,9 +29,9 @@ export function Switch({
       } ${className}`}
     >
       <span className="min-w-0">
-        <span className="block text-body font-bold text-foreground">{label}</span>
+        <span className="block text-body-lg font-bold text-foreground">{label}</span>
         {description ? (
-          <span className="mt-0.5 block text-caption text-muted-foreground">{description}</span>
+          <span className="mt-0.5 block text-body-md text-muted-foreground">{description}</span>
         ) : null}
       </span>
 

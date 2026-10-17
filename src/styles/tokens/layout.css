@@ -1,0 +1,21 @@
+/*
+ * App-level values derived from the handoff's spacing tokens. The gutter
+ * and container are read by the shell and by every page's `main`.
+ */
+:root {
+  --page-max: var(--container-max);
+  --gutter: var(--gutter-mobile);
+  --section-gap: var(--space-5);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: var(--gutter-tablet);
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --gutter: var(--gutter-desktop);
+  }
+}

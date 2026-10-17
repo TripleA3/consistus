@@ -47,7 +47,7 @@ export function BottomTabBar() {
   return (
     <nav
       aria-label="Primary"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-border backdrop-blur-[16px] min-[900px]:hidden"
+      className="fixed inset-x-0 bottom-0 z-[var(--z-sticky)] border-t border-border backdrop-blur-[16px] min-[900px]:hidden"
       style={{
         // 92% card so the blur reads through it.
         background: "color-mix(in srgb, var(--card) 92%, transparent)",

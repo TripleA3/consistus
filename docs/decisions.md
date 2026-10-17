@@ -345,14 +345,43 @@ should import from `ui/`.
 Those old screens already render with the wrong colours, since the tokens
 under them changed with the palette. That's expected until they're rebuilt.
 
-## Status tints are tokens, not hex in a component
+## The design handoff's tokens are the source of truth
 
-`StatusPill` first carried its success and warning colours inline. In dark
-mode that put a pale lime and a pale cream chip on an ink surface, which
-glared. `--success`, `--success-foreground`, `--warning` and
-`--warning-foreground` now live in `semantic.css` with dark overrides that
-drop to a low-alpha tint with a bright label, the same way `--destructive`
-already worked.
+`tokens/colors.css`, `semantic.css` and `spacing.css` are the handoff's
+files, byte for byte, so a future drop can replace them without a merge.
+Two had to be adapted and should not be overwritten blindly:
+
+- **`typography.css`** is verbatim but for the three font stacks. The
+  handoff loads the families with an `@import` from Google Fonts; we load
+  them through `next/font`, which self-hosts them and removes the extra
+  round trip, so each stack now starts with the variable `next/font`
+  exposes and keeps the handoff's own name behind it.
+- **`mobile.css`** is a rewrite. The handoff's version targets the
+  prototype's inline styles (`main[style]`, `[style*="padding:24px"]`),
+  which cannot match a Tailwind build. Ours keeps its values and intent —
+  640px breakpoint, 12px gutter, 104px bottom padding plus the safe area,
+  24px h1, 17px h2, 16px inputs, sideways-scrolling chip rows — against
+  our own markup and the `data-chip-row` attribute ChipRow sets.
+
+`layout.css` is ours: it derives `--gutter` (16 / 24 / 40 by breakpoint),
+`--page-max` and `--section-gap` from the handoff's spacing tokens, since
+the shell and every page's `main` read them.
+
+Replacing the interpolated tokens moved real values. The radius scale is
+now xs/sm/md/lg/xl rather than the input/row/tile/card/section/hero names
+I had guessed, so cards are 18px rather than 20px; `--state-disabled` is
+0.38, not the 0.45 I had; and the type roles carry their own line height
+and weight, so `text-title-lg` is the whole treatment and components no
+longer add `font-bold` on top. Headings are 600 where I had 700.
+
+## Status tints come from the palette, not from a component
+
+`StatusPill` first carried its success and warning colours inline, which
+in dark mode put a pale lime and a pale cream chip on an ink surface, and
+they glared. The handoff's palette turned out to have exactly these roles
+already: `--success-soft` / `--success`, `--warning-soft` /
+`--warning-foreground` and `--danger-soft`, each with a dark override that
+drops to a low-alpha tint behind a bright label. The pill reads those.
 
 `color-scheme` is also set on `html` now, so the browser's own date
 picker, scrollbars and autofill follow the theme — the calendar glyph in a

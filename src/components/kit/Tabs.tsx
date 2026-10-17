@@ -48,7 +48,7 @@ export function Tabs({
             {tab.label}
             {tab.count === undefined ? null : (
               <span
-                className={`rounded-pill px-1.5 py-0.5 text-micro ${
+                className={`rounded-pill px-1.5 py-0.5 text-label-sm ${
                   active ? "bg-cta text-cta-foreground" : "bg-muted text-muted-foreground"
                 }`}
               >
@@ -59,7 +59,7 @@ export function Tabs({
         );
 
         // -1px pulls the indicator onto the container's own border.
-        const classes = `-mb-px flex shrink-0 items-center gap-2 border-b-2 px-3 pb-2.5 pt-2 text-body font-bold transition-colors ${
+        const classes = `-mb-px flex shrink-0 items-center gap-2 border-b-2 px-3 pb-2.5 pt-2 text-body-lg font-bold transition-colors ${
           active
             ? "border-cta text-foreground"
             : "border-transparent text-muted-foreground hover:text-foreground"

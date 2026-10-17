@@ -14,7 +14,7 @@ type CoverPlaceholderProps = {
  */
 export function CoverPlaceholder({
   children,
-  className = "aspect-[16/9] rounded-card",
+  className = "aspect-[16/9] rounded-lg",
 }: CoverPlaceholderProps) {
   return (
     <div

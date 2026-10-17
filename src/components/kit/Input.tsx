@@ -7,7 +7,7 @@ import type {
 
 /** Shared shell so inputs, selects and textareas line up exactly. */
 const CONTROL =
-  "w-full rounded-input border border-input bg-card px-3.5 text-body text-foreground " +
+  "w-full rounded-md border border-input bg-card px-3.5 text-body-lg text-foreground " +
   "placeholder:text-muted-foreground focus-visible:border-ring";
 
 const INVALID = "border-destructive";
