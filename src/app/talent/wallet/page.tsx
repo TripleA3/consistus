@@ -1,18 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AppShell } from "@/components/layout/AppShell";
+import {
+  ArrowDown,
+  ArrowUp,
+  Receipt,
+  ShieldCheck,
+  Wallet as WalletIcon,
+} from "@phosphor-icons/react/dist/ssr";
+import { ButtonLink, Card, EmptyState, PageHeader, Section } from "@/components/kit";
+import { AppShell } from "@/components/shell/AppShell";
 import { RequireAuth } from "@/components/auth/RequireAuth";
-import { ButtonLink } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { fetchTransactions, fetchWalletSummary } from "@/lib/api/wallet";
+import { dayLabel, money } from "@/lib/format";
 import type { WalletSummary, WalletTransaction } from "@/lib/types";
-
-const currencyFormatter = (currency: string) =>
-  new Intl.NumberFormat("en-NG", { style: "currency", currency, maximumFractionDigits: 0 });
-
-const dateFormatter = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" });
 
 export default function WalletPage() {
   return (
@@ -36,82 +38,98 @@ function WalletView() {
   if (!user || !summary || !transactions) {
     return (
       <AppShell>
-        <p className="mx-auto max-w-2xl px-4 py-16 text-sm text-slate-500 sm:px-8">Loading…</p>
+        <p className="py-16 text-center text-body-md text-muted-foreground">Loading…</p>
       </AppShell>
     );
   }
 
-  const format = currencyFormatter(summary.currency);
-
   return (
-    <AppShell>
-      <div className="mx-auto flex max-w-2xl flex-col gap-8 px-4 py-10 sm:px-8">
-        <h1 className="text-2xl font-bold text-text">Wallet</h1>
+    <AppShell name={user.name} avatarUrl={user.avatarUrl}>
+      <PageHeader title="Wallet" subtitle="What you've earned, and what's on the way." />
 
-        <div className="rounded-2xl bg-navy p-6 text-white">
-          <p className="text-sm text-white/70">Available balance</p>
-          <p className="mt-1 text-3xl font-bold">{format.format(summary.availableBalance)}</p>
-          <p className="mt-2 text-sm text-white/70">
-            {format.format(summary.pendingBalance)} pending from in-progress requests
-          </p>
-          <ButtonLink
-            href="/talent/wallet/withdraw"
-            variant="accent"
-            className="mt-4 w-full justify-center rounded-full"
-          >
-            Withdraw
-          </ButtonLink>
-        </div>
+      {/* The one deep-indigo block on the talent side. */}
+      <div className="mb-3 rounded-xl bg-primary p-5 text-primary-foreground">
+        <p className="text-label-md uppercase tracking-wide opacity-70">Available balance</p>
+        <p data-count className="mt-1 text-display-sm tabular-nums">
+          {money(summary.availableBalance)}
+        </p>
+        <p className="mt-1 text-body-md opacity-80">
+          {money(summary.pendingBalance)} pending from in-progress requests
+        </p>
 
-        <div className="flex gap-3">
-          <ButtonLink href="/talent/wallet/methods" variant="neutral" className="flex-1 justify-center gap-2">
-            <Icon name="wallet" className="size-4" />
-            Withdrawal methods
-          </ButtonLink>
-          <ButtonLink href="/talent/wallet/verify" variant="neutral" className="flex-1 justify-center gap-2">
-            <Icon name="shield" className="size-4" />
-            Get verified
-          </ButtonLink>
-        </div>
+        <ButtonLink href="/talent/wallet/withdraw" size="lg" block className="mt-4">
+          Withdraw
+        </ButtonLink>
+      </div>
 
-        <div className="flex flex-col gap-3">
-          <h2 className="text-base font-semibold text-text">Recent activity</h2>
-          {transactions.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-card-border p-8 text-center text-sm text-slate-500">
-              No transactions yet.
-            </div>
-          ) : (
-            <ul className="flex flex-col gap-2">
-              {transactions.map((txn) => (
-                <li
-                  key={txn.id}
-                  className="flex items-center justify-between gap-4 rounded-xl border border-card-border bg-white p-4"
-                >
-                  <div className="flex items-center gap-3">
+      <div className="mb-[var(--section-gap)] grid grid-cols-2 gap-3">
+        <ButtonLink
+          href="/talent/wallet/methods"
+          variant="outline"
+          className="bg-card"
+          leading={<WalletIcon size={17} weight="bold" />}
+        >
+          Methods
+        </ButtonLink>
+        <ButtonLink
+          href="/talent/wallet/verify"
+          variant="outline"
+          className="bg-card"
+          leading={<ShieldCheck size={17} weight="bold" />}
+        >
+          Get verified
+        </ButtonLink>
+      </div>
+
+      <Section title="Recent activity">
+        {transactions.length === 0 ? (
+          <EmptyState
+            icon={<Receipt size={26} />}
+            title="No transactions yet"
+            body="Earnings and withdrawals show up here."
+          />
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {transactions.map((txn) => {
+              const credit = txn.kind === "credit";
+              return (
+                <li key={txn.id}>
+                  <Card className="flex items-center justify-between gap-3 p-3.5">
+                    <span className="flex min-w-0 items-center gap-3">
+                      <span
+                        className={`flex size-9 shrink-0 items-center justify-center rounded-pill ${
+                          credit ? "bg-success-soft text-success" : "bg-muted text-muted-foreground"
+                        }`}
+                      >
+                        {credit ? (
+                          <ArrowDown size={16} weight="bold" />
+                        ) : (
+                          <ArrowUp size={16} weight="bold" />
+                        )}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block truncate text-title-md">{txn.reason}</span>
+                        <span className="block text-body-md text-muted-foreground">
+                          {dayLabel(txn.createdAt)}
+                        </span>
+                      </span>
+                    </span>
+
                     <span
-                      className={`flex size-9 items-center justify-center rounded-full ${
-                        txn.kind === "credit" ? "bg-lime-100 text-lime-500" : "bg-slate-100 text-slate-500"
+                      className={`shrink-0 text-label-lg tabular-nums ${
+                        credit ? "text-success" : "text-foreground"
                       }`}
                     >
-                      <Icon name={txn.kind === "credit" ? "plus" : "minus"} className="size-4" />
+                      {credit ? "+" : "−"}
+                      {money(txn.amount)}
                     </span>
-                    <div>
-                      <p className="text-sm font-medium text-text">{txn.reason}</p>
-                      <p className="text-xs text-slate-400">{dateFormatter.format(new Date(txn.createdAt))}</p>
-                    </div>
-                  </div>
-                  <span
-                    className={`text-sm font-semibold ${txn.kind === "credit" ? "text-lime-500" : "text-text"}`}
-                  >
-                    {txn.kind === "credit" ? "+" : "-"}
-                    {format.format(txn.amount)}
-                  </span>
+                  </Card>
                 </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
+              );
+            })}
+          </ul>
+        )}
+      </Section>
     </AppShell>
   );
 }

@@ -2,39 +2,18 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { AppShell } from "@/components/layout/AppShell";
+import { VideoCamera } from "@phosphor-icons/react/dist/ssr";
+import { Card, Chip, ChipRow, EmptyState, PageHeader, StatusPill } from "@/components/kit";
+import { AppShell } from "@/components/shell/AppShell";
 import { RequireAuth } from "@/components/auth/RequireAuth";
-import { Chip } from "@/components/ui/Chip";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { fetchRequestsByTalentId } from "@/lib/api/requests";
 import { REQUEST_STATUS_LABEL } from "@/lib/requests/requestStateMachine";
-import type { RequestStatus, RequestType, TalentRequest } from "@/lib/types";
+import { REQUEST_STATUS_TONE, REQUEST_TYPE_LABEL } from "@/lib/requests/display";
+import { money } from "@/lib/format";
+import type { RequestStatus, TalentRequest } from "@/lib/types";
 
-const typeLabel: Record<RequestType, string> = {
-  "personalised-video": "Personalised video",
-  "guest-speaker": "Guest speaker",
-  "special-appearance": "Special appearance",
-  "event-invitation": "Event invitation",
-};
-
-const statusTone: Record<RequestStatus, string> = {
-  draft: "bg-slate-100 text-slate-500",
-  submitted: "bg-lime-100 text-lime-500",
-  accepted: "bg-sky-100 text-sky-600",
-  declined: "bg-red-100 text-danger",
-  "in-progress": "bg-amber-100 text-warning",
-  delivered: "bg-violet-100 text-violet-600",
-  completed: "bg-lime-100 text-lime-500",
-  cancelled: "bg-slate-100 text-slate-500",
-};
-
-const currencyFormatter = new Intl.NumberFormat("en-NG", {
-  style: "currency",
-  currency: "NGN",
-  maximumFractionDigits: 0,
-});
-
-const filters: { value: "all" | RequestStatus; label: string }[] = [
+const FILTERS: { value: "all" | RequestStatus; label: string }[] = [
   { value: "all", label: "All" },
   { value: "submitted", label: "New" },
   { value: "accepted", label: "Accepted" },
@@ -68,60 +47,69 @@ function RequestsInboxView() {
 
   if (!user || requests === null) {
     return (
-      <AppShell activePath="/">
-        <p className="mx-auto max-w-3xl px-4 py-16 text-sm text-slate-500 sm:px-8">Loading…</p>
+      <AppShell>
+        <p className="py-16 text-center text-body-md text-muted-foreground">Loading…</p>
       </AppShell>
     );
   }
 
   return (
-    <AppShell>
-      <div className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-10 sm:px-8">
-        <h1 className="text-2xl font-bold text-text">Requests inbox</h1>
-        <div className="flex flex-wrap gap-2">
-          {filters.map((item) => (
+    <AppShell name={user.name} avatarUrl={user.avatarUrl}>
+      <PageHeader
+        title="Requests"
+        accent="inbox"
+        subtitle="Accept, decline and deliver what fans have asked for."
+      />
+
+      <ChipRow label="Filter requests by status" className="mb-4">
+        {FILTERS.map((item) => {
+          const count =
+            item.value === "all"
+              ? requests.length
+              : requests.filter((r) => r.status === item.value).length;
+          return (
             <Chip
               key={item.value}
-              variant={filter === item.value ? "active" : "filled"}
+              selected={filter === item.value}
               onClick={() => setFilter(item.value)}
             >
-              {item.label}
+              {item.label} {count > 0 ? `(${count})` : ""}
             </Chip>
-          ))}
-        </div>
+          );
+        })}
+      </ChipRow>
 
-        {filtered.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-card-border p-10 text-center text-sm text-slate-500">
-            No requests here yet.
-          </div>
-        ) : (
-          <ul className="flex flex-col gap-3">
-            {filtered.map((request) => (
-              <li key={request.id}>
-                <Link
-                  href={`/talent/requests/${request.id}`}
-                  className="flex items-center justify-between gap-4 rounded-xl border border-card-border bg-white p-4 hover:border-lime-500"
-                >
-                  <div>
-                    <p className="text-sm font-semibold text-text">{typeLabel[request.type]}</p>
-                    <p className="mt-0.5 line-clamp-1 text-sm text-slate-500">{request.message}</p>
+      {filtered.length === 0 ? (
+        <EmptyState
+          icon={<VideoCamera size={26} />}
+          title="Nothing here"
+          body="Requests matching this filter will show up here."
+        />
+      ) : (
+        <ul className="flex flex-col gap-2">
+          {filtered.map((request) => (
+            <li key={request.id}>
+              <Link href={`/talent/requests/${request.id}`} className="block">
+                <Card className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-title-md">{REQUEST_TYPE_LABEL[request.type]}</p>
+                    <p className="line-clamp-1 text-body-md text-muted-foreground">
+                      {request.message}
+                    </p>
                   </div>
-                  <div className="flex shrink-0 items-center gap-3">
-                    <span className="text-sm font-semibold text-text">
-                      {currencyFormatter.format(request.amount)}
-                    </span>
-                    <span
-                      className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusTone[request.status]}`}
-                    >
+
+                  <div className="flex shrink-0 flex-col items-end gap-1.5">
+                    <span className="text-label-lg tabular-nums">{money(request.amount)}</span>
+                    <StatusPill tone={REQUEST_STATUS_TONE[request.status]}>
                       {REQUEST_STATUS_LABEL[request.status]}
-                    </span>
+                    </StatusPill>
                   </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+                </Card>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </AppShell>
   );
 }

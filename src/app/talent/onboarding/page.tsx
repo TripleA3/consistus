@@ -1,9 +1,9 @@
 "use client";
 
-import { AppShell } from "@/components/layout/AppShell";
+import { CheckCircle } from "@phosphor-icons/react/dist/ssr";
+import { ButtonLink } from "@/components/kit";
+import { AppShell } from "@/components/shell/AppShell";
 import { RequireAuth } from "@/components/auth/RequireAuth";
-import { ButtonLink } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
 import { useAuth } from "@/lib/auth/AuthContext";
 
 export default function TalentOnboardingPage() {
@@ -19,22 +19,28 @@ function OnboardingView() {
   if (!user) return null;
 
   return (
-    <AppShell>
-      <div className="mx-auto flex max-w-lg flex-col items-center gap-6 px-4 py-20 text-center sm:px-8">
-        <span className="flex size-16 items-center justify-center rounded-full bg-lime-100 text-lime-500">
-          <Icon name="check" className="size-8" />
-        </span>
-        <div>
-          <h1 className="text-2xl font-bold text-text">You&apos;re set up, {user.name.split(" ")[0]}!</h1>
-          <p className="mt-2 text-sm text-slate-500">
-            Your talent profile is live. Fans can now find you and send requests.
-          </p>
-        </div>
-        <div className="flex w-full flex-col gap-3 sm:flex-row">
-          <ButtonLink href={`/talent/${user.id}`} variant="accent" className="flex-1 justify-center rounded-full">
+    <AppShell name={user.name} avatarUrl={user.avatarUrl}>
+      <div className="mx-auto max-w-md py-10 text-center">
+        <CheckCircle size={64} weight="fill" className="mx-auto text-success" />
+
+        <h1 className="mt-4 text-headline-lg">
+          You&apos;re set up,{" "}
+          <span className="font-accent font-normal italic">{user.name.split(" ")[0]}</span>
+        </h1>
+        <p className="mt-2 text-body-lg text-muted-foreground">
+          Your talent profile is live. Fans can find you and send requests.
+        </p>
+
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+          <ButtonLink href={`/talent/${user.id}`} size="lg" className="flex-1">
             View my profile
           </ButtonLink>
-          <ButtonLink href="/talent/dashboard" variant="neutral" className="flex-1 justify-center rounded-full">
+          <ButtonLink
+            href="/talent/dashboard"
+            variant="outline"
+            size="lg"
+            className="flex-1 bg-card"
+          >
             Go to dashboard
           </ButtonLink>
         </div>

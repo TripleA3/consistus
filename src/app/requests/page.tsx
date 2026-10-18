@@ -4,32 +4,14 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CheckCircle, Play, VideoCamera } from "@phosphor-icons/react/dist/ssr";
 import { Button, Card, EmptyState, PageHeader, StatusPill } from "@/components/kit";
-import type { StatusTone } from "@/components/kit";
 import { AppShell } from "@/components/shell/AppShell";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { applyRequestEvent, fetchRequestsForFan } from "@/lib/api/requests";
 import { REQUEST_STATUS_LABEL } from "@/lib/requests/requestStateMachine";
+import { REQUEST_STATUS_TONE, REQUEST_TYPE_LABEL } from "@/lib/requests/display";
 import { dayLabel, money } from "@/lib/format";
-import type { RequestStatus, RequestType, TalentRequestWithTalent } from "@/lib/types";
-
-const TYPE_LABEL: Record<RequestType, string> = {
-  "personalised-video": "Personalised video",
-  "guest-speaker": "Guest speaker",
-  "special-appearance": "Special appearance",
-  "event-invitation": "Event invitation",
-};
-
-const STATUS_TONE: Record<RequestStatus, StatusTone> = {
-  draft: "neutral",
-  submitted: "info",
-  accepted: "info",
-  declined: "danger",
-  "in-progress": "warning",
-  delivered: "info",
-  completed: "success",
-  cancelled: "neutral",
-};
+import type { TalentRequestWithTalent } from "@/lib/types";
 
 export default function FanRequestsPage() {
   return (
@@ -89,7 +71,7 @@ function FanRequestsView() {
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-title-md">
-                      {TYPE_LABEL[request.type]} ·{" "}
+                      {REQUEST_TYPE_LABEL[request.type]} ·{" "}
                       <Link href={`/talent/${request.talent.id}`} className="text-link hover:underline">
                         {request.talent.name}
                       </Link>
@@ -98,7 +80,7 @@ function FanRequestsView() {
                       Sent {dayLabel(request.createdAt)}
                     </p>
                   </div>
-                  <StatusPill tone={STATUS_TONE[request.status]}>
+                  <StatusPill tone={REQUEST_STATUS_TONE[request.status]}>
                     {REQUEST_STATUS_LABEL[request.status]}
                   </StatusPill>
                 </div>
@@ -109,7 +91,7 @@ function FanRequestsView() {
                   <div className="mt-3 rounded-md bg-secondary p-4 text-secondary-foreground">
                     <p className="text-label-lg">
                       {request.talent.name} has delivered your{" "}
-                      {TYPE_LABEL[request.type].toLowerCase()}.
+                      {REQUEST_TYPE_LABEL[request.type].toLowerCase()}.
                     </p>
 
                     {request.deliveryUrl ? (
