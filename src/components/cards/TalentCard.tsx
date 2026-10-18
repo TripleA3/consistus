@@ -16,9 +16,18 @@ const CATEGORY_LABELS: Record<TalentProfile["category"], string> = {
  * A talent in the Discover rail. Fixed width so the rail scrolls
  * sideways on a phone rather than squeezing.
  */
-export function TalentCard({ talent, profile }: { talent: User; profile: TalentProfile }) {
+export function TalentCard({
+  talent,
+  profile,
+  className = "w-[164px] shrink-0 sm:w-[184px]",
+}: {
+  talent: User;
+  profile: TalentProfile;
+  /** Overridden to `w-full` where the card sits in a grid, not a rail. */
+  className?: string;
+}) {
   return (
-    <Card href={`/talent/${talent.id}`} flush className="w-[164px] shrink-0 sm:w-[184px]">
+    <Card href={`/talent/${talent.id}`} flush className={className}>
       <CoverPlaceholder className="aspect-square">
         <UserIcon size={34} />
       </CoverPlaceholder>

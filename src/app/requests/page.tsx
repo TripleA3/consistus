@@ -2,41 +2,34 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AppShell } from "@/components/layout/AppShell";
+import { CheckCircle, Play, VideoCamera } from "@phosphor-icons/react/dist/ssr";
+import { Button, Card, EmptyState, PageHeader, StatusPill } from "@/components/kit";
+import type { StatusTone } from "@/components/kit";
+import { AppShell } from "@/components/shell/AppShell";
 import { RequireAuth } from "@/components/auth/RequireAuth";
-import { Button, ButtonLink } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { applyRequestEvent, fetchRequestsForFan } from "@/lib/api/requests";
 import { REQUEST_STATUS_LABEL } from "@/lib/requests/requestStateMachine";
+import { dayLabel, money } from "@/lib/format";
 import type { RequestStatus, RequestType, TalentRequestWithTalent } from "@/lib/types";
 
-const typeLabel: Record<RequestType, string> = {
+const TYPE_LABEL: Record<RequestType, string> = {
   "personalised-video": "Personalised video",
   "guest-speaker": "Guest speaker",
   "special-appearance": "Special appearance",
   "event-invitation": "Event invitation",
 };
 
-const statusTone: Record<RequestStatus, string> = {
-  draft: "bg-slate-100 text-slate-500",
-  submitted: "bg-lime-100 text-lime-500",
-  accepted: "bg-sky-100 text-sky-600",
-  declined: "bg-red-100 text-danger",
-  "in-progress": "bg-amber-100 text-warning",
-  delivered: "bg-violet-100 text-violet-600",
-  completed: "bg-lime-100 text-lime-500",
-  cancelled: "bg-slate-100 text-slate-500",
+const STATUS_TONE: Record<RequestStatus, StatusTone> = {
+  draft: "neutral",
+  submitted: "info",
+  accepted: "info",
+  declined: "danger",
+  "in-progress": "warning",
+  delivered: "info",
+  completed: "success",
+  cancelled: "neutral",
 };
-
-const dateFormatter = new Intl.DateTimeFormat("en-GB", {
-  day: "numeric",
-  month: "short",
-  year: "numeric",
-});
-
-const currencyFormatter = (currency: string) =>
-  new Intl.NumberFormat("en-NG", { style: "currency", currency, maximumFractionDigits: 0 });
 
 export default function FanRequestsPage() {
   return (
@@ -70,80 +63,74 @@ function FanRequestsView() {
   }
 
   return (
-    <AppShell activePath="/requests">
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-10 sm:px-8">
-        <div>
-          <h1 className="text-2xl font-bold text-text">My requests</h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Everything you&apos;ve asked talent for, and where each one has got to.
-          </p>
-        </div>
+    <AppShell>
+      <PageHeader
+        title="My"
+        accent="requests"
+        subtitle="Everything you've asked talent for, and where each one has got to."
+      />
 
-        {requests === null ? (
-          <div className="rounded-xl border border-dashed border-card-border p-10 text-center text-sm text-slate-500">
-            Loading your requests…
-          </div>
-        ) : requests.length === 0 ? (
-          <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-card-border p-10 text-center">
-            <p className="text-sm text-slate-500">You haven&apos;t made any requests yet.</p>
-            <ButtonLink href="/" variant="accent" className="rounded-full">
-              Find talent
-            </ButtonLink>
-          </div>
-        ) : (
-          <ul className="flex flex-col gap-4">
-            {requests.map((request) => (
-              <li
-                key={request.id}
-                className="flex flex-col gap-3 rounded-2xl border border-card-border bg-white p-5"
-              >
+      {requests === null ? (
+        <p className="py-10 text-center text-body-md text-muted-foreground">
+          Loading your requests…
+        </p>
+      ) : requests.length === 0 ? (
+        <EmptyState
+          icon={<VideoCamera size={26} />}
+          title="No requests yet"
+          body="Ask a celebrity for a video or an appearance and it shows up here."
+          action={{ label: "Find talent", href: "/" }}
+        />
+      ) : (
+        <ul className="flex flex-col gap-3">
+          {requests.map((request) => (
+            <li key={request.id}>
+              <Card>
                 <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-semibold text-text">
-                      {typeLabel[request.type]} ·{" "}
-                      <Link
-                        href={`/talent/${request.talent.id}`}
-                        className="text-lime-500 hover:underline"
-                      >
+                  <div className="min-w-0">
+                    <p className="text-title-md">
+                      {TYPE_LABEL[request.type]} ·{" "}
+                      <Link href={`/talent/${request.talent.id}`} className="text-link hover:underline">
                         {request.talent.name}
                       </Link>
                     </p>
-                    <p className="mt-0.5 text-xs text-slate-500">
-                      Sent {dateFormatter.format(new Date(request.createdAt))}
+                    <p className="mt-0.5 text-body-md text-muted-foreground">
+                      Sent {dayLabel(request.createdAt)}
                     </p>
                   </div>
-                  <span
-                    className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${statusTone[request.status]}`}
-                  >
+                  <StatusPill tone={STATUS_TONE[request.status]}>
                     {REQUEST_STATUS_LABEL[request.status]}
-                  </span>
+                  </StatusPill>
                 </div>
 
-                <p className="text-sm text-slate-500">{request.message}</p>
+                <p className="mt-2.5 text-body-md text-muted-foreground">{request.message}</p>
 
                 {request.status === "delivered" ? (
-                  <div className="flex flex-col gap-3 rounded-xl border border-violet-200 bg-violet-50 p-4">
-                    <p className="text-sm font-medium text-text">
-                      {request.talent.name} has delivered your {typeLabel[request.type].toLowerCase()}.
+                  <div className="mt-3 rounded-md bg-secondary p-4 text-secondary-foreground">
+                    <p className="text-label-lg">
+                      {request.talent.name} has delivered your{" "}
+                      {TYPE_LABEL[request.type].toLowerCase()}.
                     </p>
+
                     {request.deliveryUrl ? (
                       <a
                         href={request.deliveryUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center gap-1.5 text-sm font-medium text-lime-500 underline"
+                        className="mt-2 inline-flex items-center gap-1.5 text-body-md font-bold underline"
                       >
-                        <Icon name="play" className="size-4" />
+                        <Play size={15} weight="fill" />
                         View your delivery
                       </a>
                     ) : null}
-                    <p className="text-xs text-slate-500">
+
+                    <p className="mt-2 text-body-md opacity-80">
                       Confirming releases payment to {request.talent.name}.
                     </p>
+
                     <Button
-                      variant="accent"
                       size="sm"
-                      className="w-fit rounded-full"
+                      className="mt-3"
                       disabled={confirming === request.id}
                       onClick={() => confirmReceipt(request.id)}
                     >
@@ -153,15 +140,15 @@ function FanRequestsView() {
                 ) : null}
 
                 {request.status === "completed" ? (
-                  <p className="flex items-center gap-2 text-sm text-slate-500">
-                    <Icon name="check" className="size-4 text-lime-500" />
+                  <p className="mt-2.5 flex flex-wrap items-center gap-1.5 text-body-md text-muted-foreground">
+                    <CheckCircle size={16} weight="fill" className="text-success" />
                     You confirmed this delivery.
                     {request.deliveryUrl ? (
                       <a
                         href={request.deliveryUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="font-medium text-lime-500 underline"
+                        className="font-bold text-link underline"
                       >
                         View again
                       </a>
@@ -169,20 +156,18 @@ function FanRequestsView() {
                   </p>
                 ) : null}
 
-                <div className="flex items-center justify-between border-t border-dashed border-card-border pt-3 text-sm">
-                  <span className="text-slate-500">
+                <div className="mt-3 flex items-center justify-between gap-3 border-t border-dashed border-border pt-3">
+                  <span className="truncate text-body-md text-muted-foreground">
                     {request.occasion ? `${request.occasion} · ` : ""}
-                    {request.recipientName ? `For ${request.recipientName}` : " "}
+                    {request.recipientName ? `For ${request.recipientName}` : ""}
                   </span>
-                  <span className="font-semibold text-text">
-                    {currencyFormatter(request.currency).format(request.amount)}
-                  </span>
+                  <span className="shrink-0 text-label-lg">{money(request.amount)}</span>
                 </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+              </Card>
+            </li>
+          ))}
+        </ul>
+      )}
     </AppShell>
   );
 }
