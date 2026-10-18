@@ -1,33 +1,29 @@
-import { ButtonLink } from "@/components/ui/Button";
-import { Icon, type IconName } from "@/components/ui/Icon";
+import { EnvelopeSimple, Microphone } from "@phosphor-icons/react/dist/ssr";
+import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
+import { ButtonLink } from "@/components/kit";
 import type { RequestType } from "@/lib/types";
 
-const options: { type: RequestType; label: string; icon: IconName }[] = [
-  { type: "guest-speaker", label: "Guest speaker", icon: "user" },
-  { type: "event-invitation", label: "Event invitation", icon: "mail" },
+const OPTIONS: { type: RequestType; label: string; icon: PhosphorIcon }[] = [
+  { type: "guest-speaker", label: "Guest speaker", icon: Microphone },
+  { type: "event-invitation", label: "Event invitation", icon: EnvelopeSimple },
 ];
 
-type RequestOptionsProps = {
-  talentId: string;
-};
-
 /**
- * The video and special-appearance requests get top billing as CTAs on the
+ * The video and special-appearance requests get top billing as CTAs in the
  * profile header; guest-speaker and event-invitation are secondary paths
  * to the same request flow.
  */
-export function RequestOptions({ talentId }: RequestOptionsProps) {
+export function RequestOptions({ talentId }: { talentId: string }) {
   return (
-    <div className="flex flex-col gap-3 sm:flex-row">
-      {options.map((option) => (
+    <div className="mb-[var(--section-gap)] grid grid-cols-2 gap-3">
+      {OPTIONS.map((option) => (
         <ButtonLink
           key={option.type}
           href={`/talent/${talentId}/request/${option.type}`}
-          variant="neutral"
-          size="sm"
-          className="flex-1 justify-center gap-2"
+          variant="outline"
+          className="bg-card"
+          leading={<option.icon size={17} weight="bold" />}
         >
-          <Icon name={option.icon} className="size-4" />
           {option.label}
         </ButtonLink>
       ))}

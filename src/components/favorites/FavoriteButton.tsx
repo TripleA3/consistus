@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Icon } from "@/components/ui/Icon";
+import { Heart } from "@phosphor-icons/react/dist/ssr";
 import { useAuth } from "@/lib/auth/AuthContext";
 import {
   fetchFavoriteIds,
@@ -73,12 +73,12 @@ export function FavoriteButton({
       aria-label={label}
       aria-pressed={saved}
       className={`inline-flex items-center gap-2 transition-colors disabled:opacity-50 ${
-        saved ? "text-danger" : "text-slate-400 hover:text-danger"
+        saved ? "text-destructive" : "text-muted-foreground hover:text-destructive"
       } ${className}`}
     >
-      <Icon name="heart" className={`size-6 ${saved ? "fill-current" : ""}`} />
+      <Heart size={22} weight={saved ? "fill" : "bold"} />
       {withLabel ? (
-        <span className="text-sm font-medium">{saved ? "Saved" : "Save"}</span>
+        <span className="text-label-lg">{saved ? "Saved" : "Save"}</span>
       ) : null}
     </button>
   );

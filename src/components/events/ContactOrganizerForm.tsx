@@ -1,25 +1,21 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/ui/Button";
+import { CheckCircle } from "@phosphor-icons/react/dist/ssr";
+import { Button, Card, Field, Input, Textarea } from "@/components/kit";
 
-type ContactOrganizerFormProps = {
-  organizerName: string;
-};
-
-export function ContactOrganizerForm({ organizerName }: ContactOrganizerFormProps) {
+export function ContactOrganizerForm({ organizerName }: { organizerName: string }) {
   const [status, setStatus] = useState<"idle" | "submitting" | "sent" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const message = String(formData.get("message") ?? "").trim();
-    const email = String(formData.get("email") ?? "").trim();
+    const data = new FormData(event.currentTarget);
+    const message = String(data.get("message") ?? "").trim();
+    const email = String(data.get("email") ?? "").trim();
 
     if (!message || !email) {
-      setError("Please fill in both your message and email.");
+      setError("Add your message and email.");
       setStatus("error");
       return;
     }
@@ -32,45 +28,59 @@ export function ContactOrganizerForm({ organizerName }: ContactOrganizerFormProp
       setStatus("sent");
     } catch {
       setStatus("error");
-      setError("Something went wrong sending your message. Please try again.");
+      setError("That didn't send. Try again.");
     }
   }
 
   if (status === "sent") {
     return (
-      <div className="rounded-2xl border border-[#e5e7eb] p-8 text-center shadow-[0px_0px_80px_0px_rgba(228,232,247,0.4)]">
-        <p className="text-xl font-bold text-[#3a3a3a]">Message sent</p>
-        <p className="mt-2 text-base text-slate-500">
-          {organizerName} will get back to you by email soon.
+      <Card className="text-center">
+        <CheckCircle size={30} weight="fill" className="mx-auto mb-2 text-success" />
+        <p className="text-title-md">Message sent</p>
+        <p className="mt-1 text-body-md text-muted-foreground">
+          {organizerName} will reply by email.
         </p>
-      </div>
+      </Card>
     );
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col gap-8 rounded-2xl border border-[#e5e7eb] p-6 shadow-[0px_0px_80px_0px_rgba(228,232,247,0.4)] sm:p-8"
-    >
-      <div className="flex flex-col gap-2">
-        <p className="text-xl font-bold text-[#3a3a3a]">Contact Organizer</p>
-        <p className="text-base text-black">
-          Have any questions? Reach out to the event organizer
-        </p>
-      </div>
-      <div className="grid gap-6 sm:grid-cols-2">
-        <Input name="message" label="Message" placeholder="Type your message here" />
-        <Input name="email" type="email" label="Email" placeholder="Enter your email" />
-      </div>
-      {error ? <p className="text-sm text-danger">{error}</p> : null}
-      <Button
-        type="submit"
-        variant="accent"
-        className="w-fit rounded-full"
-        disabled={status === "submitting"}
-      >
-        {status === "submitting" ? "Sending…" : "Send Message"}
-      </Button>
-    </form>
+    <Card>
+      <h2 className="text-title-md">Contact organiser</h2>
+      <p className="mt-0.5 text-body-md text-muted-foreground">
+        Questions about the event? Ask {organizerName}.
+      </p>
+
+      <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3">
+        <Field label="Message" htmlFor="contact-message">
+          <Textarea
+            id="contact-message"
+            name="message"
+            rows={3}
+            placeholder="What would you like to know?"
+          />
+        </Field>
+
+        <Field label="Email" htmlFor="contact-email">
+          <Input
+            id="contact-email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            placeholder="you@email.com"
+          />
+        </Field>
+
+        {error ? (
+          <p role="alert" className="text-body-md text-destructive">
+            {error}
+          </p>
+        ) : null}
+
+        <Button type="submit" block disabled={status === "submitting"}>
+          {status === "submitting" ? "Sending…" : "Send message"}
+        </Button>
+      </form>
+    </Card>
   );
 }
