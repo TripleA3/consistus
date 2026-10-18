@@ -64,7 +64,7 @@ function TicketsView() {
               <li key={order.id}>
                 <Card flush>
                   <div className="flex gap-3 p-3">
-                    <CoverPlaceholder className="size-[84px] shrink-0 rounded-md">
+                    <CoverPlaceholder seed={order.event.id} className="size-[84px] shrink-0 rounded-md">
                       <CalendarBlank size={22} />
                     </CoverPlaceholder>
 

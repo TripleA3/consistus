@@ -12,7 +12,7 @@ export function EventCard({ event }: { event: EventItem }) {
   return (
     <Card href={`/events/${event.id}`} flush className="group">
       <div className="relative">
-        <CoverPlaceholder className="aspect-[4/3]">
+        <CoverPlaceholder seed={event.id} className="aspect-[4/3]">
           <CalendarBlank size={30} />
         </CoverPlaceholder>
         <StatusPill tone="neutral" className="absolute left-2.5 top-2.5 bg-card/90">

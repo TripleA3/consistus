@@ -40,7 +40,7 @@ export default async function EventDetailsPage({ params }: PageProps<"/events/[i
     <AppShell>
       <PageHeader title={event.title} back="/events" />
 
-      <CoverPlaceholder className="mb-5 aspect-[16/9] rounded-xl sm:aspect-[21/9]">
+      <CoverPlaceholder seed={event.id} className="mb-5 aspect-[16/9] rounded-xl sm:aspect-[21/9]">
         <CalendarBlank size={44} />
       </CoverPlaceholder>
 

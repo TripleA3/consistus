@@ -28,7 +28,7 @@ export function TalentCard({
 }) {
   return (
     <Card href={`/talent/${talent.id}`} flush className={className}>
-      <CoverPlaceholder className="aspect-square">
+      <CoverPlaceholder seed={talent.id} className="aspect-square">
         <UserIcon size={34} />
       </CoverPlaceholder>
 

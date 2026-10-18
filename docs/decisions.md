@@ -446,3 +446,27 @@ Plus Jakarta Sans in ExtraBold, Bold, SemiBold and Regular.
 
 Every one of those numbers is asserted against the live render in the
 browser, so a regression shows up as a measurement, not an opinion.
+
+## There are no images to add, so covers are generated instead
+
+The design PDF carries no artwork: `pdfimages` lists nothing, the file has
+zero `/Subtype /Image` objects, and its content stream contains no raster
+draw operations. The onboarding screen is entirely vector and text, which
+is correct — that screen has no photography in it.
+
+Nor is there artwork anywhere else: `public/` is empty, the seed sets
+`coverImage` to the event's own id rather than a path, and no user has an
+`avatarUrl`. Image CDNs are also unreachable from this container (the
+egress proxy refuses images.unsplash.com and picsum.photos outright), so
+nothing can be fetched in.
+
+Rather than invent photography, `CoverPlaceholder` now derives its
+treatment from a seed — the entity's id — picking one of six patterns
+built from the indigo and lime ramps. Seeding is a pure FNV-1a hash, so
+the same event always gets the same cover, on the server and the client
+alike; the classic `h * 31` was tried first and spread ids too poorly,
+since they differ in only a few characters.
+
+It also takes a `src`. The moment real artwork exists — files in `public/`
+or a URL on the record — passing it renders the image and nothing else
+about the layout moves.

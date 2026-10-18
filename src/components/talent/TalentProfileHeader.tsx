@@ -27,7 +27,7 @@ export function TalentProfileHeader({
 
   return (
     <Card flush className="mb-[var(--section-gap)]">
-      <CoverPlaceholder className="aspect-[3/1]" />
+      <CoverPlaceholder seed={talent.id} className="aspect-[3/1]" />
 
       <div className="p-4">
         <div className="flex items-start justify-between gap-3">
