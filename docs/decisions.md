@@ -410,3 +410,39 @@ centred layout, so the brand mark sits just above the form block rather
 than at the top of the page. Pinning it top-left instead keeps it from
 floating in the middle of a tall window, and matches where it sits on a
 phone, where the content fills the screen anyway.
+
+## The onboarding PDF was measured, not eyeballed
+
+The design file arrived as a one-page PDF print of `Fanero-Onboarding.dc.html`,
+and the first pass built from the rendered picture. The PDF is a vector
+print from Chrome, though, so its content stream carries the real numbers:
+after its two transforms (`.24 … cm` then `3.125 … cm`, net 0.75 with Y
+flipped) the inner coordinates are CSS pixels on an 880x1140 viewport.
+
+Decompressing it gave every filled rect, every stroked border, and every
+text run's size, font and baseline. What that corrected:
+
+- **There is no divider rule.** The only strokes in the whole file are the
+  three inputs and the two social buttons. The "or continue with" label
+  stands alone - the rule I had drawn was invented.
+- The heading is **26.88px**, which is `headline-md` at 880px, not
+  `headline-lg` (31.2px there).
+- The column is **400px**, not the 420 I guessed, centred at x=240.
+- The segmented track is **48px** tall with 40px segments, not 44/36.
+- Field labels are **13px/600** and control text **15px** - both from the
+  handoff's legacy scale rather than the Material roles, so they are
+  exposed as `--text-field` and `--text-control`, named for their use.
+- Inputs are inset **16px**, bordered `--input` (#c6c5dc), 48px tall.
+- The CTA is **400x52** with a **15px bold** label.
+- Social buttons are **193x47**, 14px apart, bordered `--input` not
+  `--border`, with **14px** icons.
+- The brand star is **half** the tile (16 on 32), not 0.56 of it.
+- The logo sits inside the vertically centred block at the page gutter,
+  which reverses the deviation noted when this screen was first built:
+  content spans y 228-920 of an 1140px page, centred.
+
+`pdffonts` also confirmed the embedded faces: Phosphor-Bold for icons and
+Plus Jakarta Sans in ExtraBold, Bold, SemiBold and Regular.
+
+Every one of those numbers is asserted against the live render in the
+browser, so a regression shows up as a measurement, not an opinion.

@@ -16,7 +16,7 @@ export function BrandLogo({ size = 32, markOnly = false, className = "" }: Brand
         style={{ width: size, height: size, borderRadius: Math.round(size * 0.3) }}
         className="flex shrink-0 items-center justify-center bg-primary text-cta"
       >
-        <Star weight="fill" size={Math.round(size * 0.56)} />
+        <Star weight="fill" size={Math.round(size * 0.5)} />
       </span>
 
       {markOnly ? null : (

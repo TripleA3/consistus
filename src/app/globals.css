@@ -120,6 +120,15 @@
   --text-label-sm--line-height: var(--label-sm-line);
   --text-label-sm--font-weight: var(--label-sm-weight);
 
+  /* Two steps from the handoff's legacy scale that the onboarding design
+     measures at: 15px for control text and 13px for field labels. Neither
+     exists in the Material roles, so they're named for their use. */
+  --text-control: var(--text-md);
+  --text-control--line-height: 1.4;
+  --text-field: var(--text-sm);
+  --text-field--line-height: 1.45;
+  --text-field--font-weight: var(--weight-semibold);
+
   --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);

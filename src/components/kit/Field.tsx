@@ -30,8 +30,8 @@ export function Field({
   const message = error ?? hint;
 
   return (
-    <div className={`flex flex-col gap-1.5 ${className}`}>
-      <label htmlFor={htmlFor} className="text-label-lg text-foreground">
+    <div className={`flex flex-col gap-1 ${className}`}>
+      <label htmlFor={htmlFor} className="text-field text-foreground">
         {label}
         {required ? (
           <span aria-hidden className="ml-0.5 text-destructive">

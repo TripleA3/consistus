@@ -62,12 +62,17 @@ export function AuthScreen({ mode }: { mode: Mode }) {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col px-[var(--gutter)] py-6">
+    /*
+     * The design centres the whole block vertically, with the brand mark at
+     * the page gutter rather than above the column - measured off the
+     * design file, where content spans y 228-920 of an 1140px page.
+     */
+    <div className="flex min-h-dvh flex-col justify-center px-[var(--gutter)] py-10">
       <Link href="/" aria-label="Fannero home" className="self-start">
         <BrandLogo size={32} />
       </Link>
 
-      <main className="mx-auto flex w-full max-w-[420px] flex-1 flex-col justify-center py-10">
+      <main className="mx-auto w-full max-w-[400px] pt-8">
         <Segmented
           block
           label="Sign up or sign in"
@@ -80,10 +85,10 @@ export function AuthScreen({ mode }: { mode: Mode }) {
           className="mb-7"
         />
 
-        <h1 className="text-headline-lg">{copy.title}</h1>
+        <h1 className="text-headline-md">{copy.title}</h1>
         <p className="mt-1 text-body-md text-muted-foreground">{copy.subtitle}</p>
 
-        <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-4">
           {mode === "sign-up" ? (
             <Field label="Full name" htmlFor="name">
               <Input id="name" name="name" autoComplete="name" placeholder="Ada Okafor" />
@@ -116,35 +121,40 @@ export function AuthScreen({ mode }: { mode: Mode }) {
             </p>
           ) : null}
 
-          <Button type="submit" size="lg" block disabled={busy} className="mt-1">
+          <Button type="submit" size="lg" block disabled={busy} className="mt-2">
             {busy ? "One moment…" : copy.submit}
           </Button>
         </form>
 
-        {/* The rule runs the full width with the label centred beneath it. */}
-        <hr className="mt-6 border-border" />
-        <p className="mb-4 mt-2 text-center text-body-md text-muted-foreground">or continue with</p>
+        {/* No rule: the design file has only the centred label here. */}
+        <p className="mb-6 mt-6 text-center text-body-sm text-muted-foreground">
+          or continue with
+        </p>
 
-        <div className="grid grid-cols-2 gap-3">
+        {/* 193x47 each, a 14px gap apart, bordered in --input not --border.
+            Height is inline so it beats the size class deterministically. */}
+        <div className="grid grid-cols-2 gap-3.5">
           <Button
             variant="outline"
             size="lg"
-            className="bg-card"
-            leading={<GoogleLogo size={20} weight="bold" />}
+            style={{ height: 47 }}
+            className="gap-2 border-input bg-card text-label-lg"
+            leading={<GoogleLogo size={14} weight="bold" />}
           >
             Google
           </Button>
           <Button
             variant="outline"
             size="lg"
-            className="bg-card"
-            leading={<AppleLogo size={20} weight="fill" />}
+            style={{ height: 47 }}
+            className="gap-2 border-input bg-card text-label-lg"
+            leading={<AppleLogo size={14} weight="fill" />}
           >
             Apple
           </Button>
         </div>
 
-        <p className="mt-5 text-center text-body-md text-muted-foreground">
+        <p className="mt-6 text-center text-body-sm text-muted-foreground">
           By continuing you agree to our{" "}
           <Link href="/legal/terms" className="text-link hover:underline">
             Terms
