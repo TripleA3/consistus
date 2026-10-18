@@ -2,9 +2,8 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Button, ButtonLink } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Icon } from "@/components/ui/Icon";
+import { ShieldCheck, Ticket, WarningCircle } from "@phosphor-icons/react/dist/ssr";
+import { Button, ButtonLink, Card, EmptyState, Field, Input } from "@/components/kit";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { useCheckout } from "@/lib/checkout/CheckoutContext";
 import { paymentProvider } from "@/lib/payments/FakePaymentProvider";
@@ -48,62 +47,103 @@ export default function CardPaymentPage() {
 
   if (lines.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-card-border p-12 text-center">
-        <p className="text-base text-slate-500">Your session has no tickets selected.</p>
-        <ButtonLink href={`/events/${event.id}/checkout/tickets`} variant="primary">
-          Start over
-        </ButtonLink>
-      </div>
+      <EmptyState
+        icon={<Ticket size={26} />}
+        title="No tickets in this session"
+        body="Start again and pick your tickets."
+        action={{ label: "Start over", href: `/events/${event.id}/checkout/tickets` }}
+      />
     );
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-semibold text-text">Pay by card</h1>
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
-        <div className="flex-1 rounded-2xl border border-card-border bg-white p-6">
+    <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+      <div className="min-w-0 flex-1">
+        <Card>
           {status === "processing" ? (
             <div className="flex flex-col items-center gap-3 py-16 text-center">
-              <span className="size-10 animate-spin rounded-full border-4 border-lime-100 border-t-lime-500" />
-              <p className="text-sm text-slate-500">Processing your payment…</p>
+              <span className="size-10 animate-spin rounded-full border-4 border-muted border-t-cta" />
+              <p className="text-body-md text-muted-foreground">Processing your payment…</p>
             </div>
           ) : status === "failed" ? (
-            <div className="flex flex-col items-center gap-4 py-10 text-center">
-              <span className="flex size-12 items-center justify-center rounded-full bg-danger/10 text-danger">
-                <Icon name="alert-circle" className="size-6" />
-              </span>
-              <p className="text-sm text-slate-500">
-                Your card was declined. Check your details and try again.
+            <div className="flex flex-col items-center gap-3 py-10 text-center">
+              <WarningCircle size={40} weight="fill" className="text-destructive" />
+              <p className="text-body-lg text-muted-foreground">
+                Your card was declined. Check the details and try again.
               </p>
-              <div className="flex gap-3">
-                <Button variant="primary" onClick={() => setStatus("idle")}>
-                  Try again
-                </Button>
-                <ButtonLink href={`/events/${event.id}/checkout/pay/bank-transfer`} variant="neutral">
-                  Pay by bank transfer instead
+              <div className="mt-1 flex flex-wrap justify-center gap-3">
+                <Button onClick={() => setStatus("idle")}>Try again</Button>
+                <ButtonLink
+                  href={`/events/${event.id}/checkout/pay/bank-transfer`}
+                  variant="outline"
+                  className="bg-card"
+                >
+                  Pay by transfer instead
                 </ButtonLink>
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-              <p className="flex items-center gap-2 text-sm text-slate-500">
-                <Icon name="shield" className="size-4 text-lime-500" />
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <p className="flex items-center gap-2 text-body-md text-muted-foreground">
+                <ShieldCheck size={17} weight="fill" className="text-success" />
                 Payments are encrypted and processed securely.
               </p>
-              <Input name="cardNumber" label="Card number" placeholder="1234 5678 9012 3456" required maxLength={19} />
-              <div className="grid grid-cols-2 gap-4">
-                <Input name="expiry" label="Expiry" placeholder="MM/YY" required maxLength={5} />
-                <Input name="cvv" label="CVV" placeholder="123" required maxLength={4} />
+
+              <Field label="Card number" htmlFor="card-number" required>
+                <Input
+                  id="card-number"
+                  name="cardNumber"
+                  inputMode="numeric"
+                  autoComplete="cc-number"
+                  placeholder="1234 5678 9012 3456"
+                  maxLength={19}
+                  required
+                />
+              </Field>
+
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="Expiry" htmlFor="card-expiry" required>
+                  <Input
+                    id="card-expiry"
+                    name="expiry"
+                    autoComplete="cc-exp"
+                    placeholder="MM/YY"
+                    maxLength={5}
+                    required
+                  />
+                </Field>
+                <Field label="CVV" htmlFor="card-cvv" required>
+                  <Input
+                    id="card-cvv"
+                    name="cvv"
+                    inputMode="numeric"
+                    autoComplete="cc-csc"
+                    placeholder="123"
+                    maxLength={4}
+                    required
+                  />
+                </Field>
               </div>
-              <Input name="cardName" label="Name on card" placeholder="e.g. Ada Eze" required />
-              <Button type="submit" variant="accent" size="lg" className="mt-2 rounded-full">
+
+              <Field label="Name on card" htmlFor="card-name" required>
+                <Input
+                  id="card-name"
+                  name="cardName"
+                  autoComplete="cc-name"
+                  placeholder="Ada Okafor"
+                  required
+                />
+              </Field>
+
+              <Button type="submit" size="lg" block className="mt-1">
                 Pay now
               </Button>
             </form>
           )}
-        </div>
-        <OrderSummary />
+        </Card>
       </div>
+
+      <OrderSummary />
     </div>
   );
 }

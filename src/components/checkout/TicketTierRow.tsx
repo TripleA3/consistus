@@ -1,10 +1,8 @@
-import { Icon } from "@/components/ui/Icon";
+import { Minus, Plus } from "@phosphor-icons/react/dist/ssr";
+import { StatusPill } from "@/components/kit";
 import { availableQuantity } from "@/lib/pricing";
+import { dayLabel, money } from "@/lib/format";
 import type { TicketTier } from "@/lib/types";
-
-const dateFormatter = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
-const currencyFormatter = (currency: string) =>
-  new Intl.NumberFormat("en-NG", { style: "currency", currency, maximumFractionDigits: 0 });
 
 type TicketTierRowProps = {
   tier: TicketTier;
@@ -16,38 +14,48 @@ type TicketTierRowProps = {
 export function TicketTierRow({ tier, quantity, onChange, saleEndsAt }: TicketTierRowProps) {
   const remaining = availableQuantity(tier);
   const soldOut = remaining === 0;
+  const atLimit = soldOut || quantity >= remaining;
 
   return (
-    <div className="flex items-center justify-between gap-4 border-b border-card-border py-5 last:border-0">
-      <div className="flex flex-col gap-1">
-        <p className="text-lg font-semibold text-text">
-          {tier.name} · {currencyFormatter(tier.currency).format(tier.price)}
-        </p>
-        <p className="text-sm text-slate-500">
-          {soldOut ? "Sold out" : `Sales end on ${dateFormatter.format(new Date(saleEndsAt))}`}
-        </p>
+    <div className="flex items-center justify-between gap-4 border-b border-border py-4 last:border-0 last:pb-0">
+      <div className="min-w-0">
+        <p className="text-title-md">{tier.name}</p>
+        <p className="text-title-lg text-link">{money(tier.price)}</p>
+
+        {soldOut ? (
+          <StatusPill tone="danger" className="mt-1">
+            Sold out
+          </StatusPill>
+        ) : (
+          <p className="mt-0.5 text-body-md text-muted-foreground">
+            Sales end {dayLabel(saleEndsAt)} · {remaining} left
+          </p>
+        )}
       </div>
-      <div className="flex items-center gap-3">
+
+      <div className="flex shrink-0 items-center gap-2">
         <button
           type="button"
           aria-label={`Remove one ${tier.name} ticket`}
           disabled={quantity === 0}
           onClick={() => onChange(quantity - 1)}
-          className="flex size-8 items-center justify-center rounded-md bg-lime-100 text-lime-500 disabled:opacity-40"
+          className="flex size-9 items-center justify-center rounded-pill border border-border text-foreground disabled:pointer-events-none"
         >
-          <Icon name="minus" className="size-4" />
+          <Minus size={16} weight="bold" />
         </button>
-        <span className="w-6 text-center text-base font-semibold text-text" aria-live="polite">
+
+        <span className="w-7 text-center text-title-md tabular-nums" aria-live="polite">
           {quantity}
         </span>
+
         <button
           type="button"
           aria-label={`Add one ${tier.name} ticket`}
-          disabled={soldOut || quantity >= remaining}
+          disabled={atLimit}
           onClick={() => onChange(quantity + 1)}
-          className="flex size-8 items-center justify-center rounded-md bg-lime-500 text-white disabled:opacity-40"
+          className="flex size-9 items-center justify-center rounded-pill bg-cta text-cta-foreground disabled:pointer-events-none"
         >
-          <Icon name="plus" className="size-4" />
+          <Plus size={16} weight="bold" />
         </button>
       </div>
     </div>

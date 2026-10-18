@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { AppShell } from "@/components/layout/AppShell";
+import { PageHeader } from "@/components/kit";
+import { AppShell } from "@/components/shell/AppShell";
 import { StepIndicator } from "@/components/checkout/StepIndicator";
 import { CheckoutProvider } from "@/lib/checkout/CheckoutContext";
 import { fetchEventById } from "@/lib/api/events";
@@ -16,11 +17,10 @@ export default async function CheckoutLayout({
   }
 
   return (
-    <AppShell activePath="/events">
-      <div className="mx-auto flex max-w-4xl flex-col gap-10 px-4 py-10 sm:px-8">
-        <StepIndicator />
-        <CheckoutProvider event={event}>{children}</CheckoutProvider>
-      </div>
+    <AppShell>
+      <PageHeader title="Checkout" subtitle={event.title} back={`/events/${event.id}`} />
+      <StepIndicator />
+      <CheckoutProvider event={event}>{children}</CheckoutProvider>
     </AppShell>
   );
 }

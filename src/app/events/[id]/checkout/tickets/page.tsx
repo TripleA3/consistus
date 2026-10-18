@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/Button";
+import { Button, Card } from "@/components/kit";
 import { TicketTierRow } from "@/components/checkout/TicketTierRow";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { useCheckout } from "@/lib/checkout/CheckoutContext";
@@ -10,17 +10,14 @@ export default function SelectTicketPage() {
   const router = useRouter();
   const { event, quantities, setQuantity, lines } = useCheckout();
 
-  const hasSelection = lines.length > 0;
-
   return (
-    <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-semibold text-text">
-        Choose the perfect ticket for your experience
-      </h1>
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
-        <div className="flex-1 rounded-2xl border border-card-border bg-white p-6">
+    <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+      <div className="min-w-0 flex-1">
+        <Card>
           {event.ticketTiers.length === 0 ? (
-            <p className="text-sm text-slate-500">No ticket tiers are available for this event.</p>
+            <p className="text-body-md text-muted-foreground">
+              No tickets are available for this event yet.
+            </p>
           ) : (
             event.ticketTiers.map((tier) => (
               <TicketTierRow
@@ -32,20 +29,20 @@ export default function SelectTicketPage() {
               />
             ))
           )}
-        </div>
-        <OrderSummary />
-      </div>
-      <div className="flex justify-end">
+        </Card>
+
         <Button
-          variant="accent"
           size="lg"
-          className="rounded-full"
-          disabled={!hasSelection}
+          block
+          className="mt-4"
+          disabled={lines.length === 0}
           onClick={() => router.push(`/events/${event.id}/checkout/details`)}
         >
           Continue
         </Button>
       </div>
+
+      <OrderSummary />
     </div>
   );
 }

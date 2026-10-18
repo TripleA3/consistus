@@ -13,9 +13,14 @@ type StepperProps = {
  * drop out below 480px, leaving the dots and the connector.
  */
 export function Stepper({ steps, current, className = "" }: StepperProps) {
+  // `current` can sit past the last step once the flow has moved beyond
+  // what the rail tracks (checkout's payment and receipt screens), which
+  // would otherwise announce "Step 4 of 3".
+  const done = current >= steps.length;
+
   return (
     <ol
-      aria-label={`Step ${current + 1} of ${steps.length}`}
+      aria-label={done ? "All steps complete" : `Step ${current + 1} of ${steps.length}`}
       className={`flex items-center ${className}`}
     >
       {steps.map((step, index) => {

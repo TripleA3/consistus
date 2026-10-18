@@ -2,11 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ButtonLink, Button } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
+import { Clock, Copy, Ticket, WarningCircle } from "@phosphor-icons/react/dist/ssr";
+import { Button, ButtonLink, Card, EmptyState } from "@/components/kit";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { useCheckout } from "@/lib/checkout/CheckoutContext";
 import { paymentProvider } from "@/lib/payments/FakePaymentProvider";
+import { money } from "@/lib/format";
 import {
   transition,
   BANK_TRANSFER_STATUS_COPY,
@@ -20,9 +21,6 @@ const MOCK_ACCOUNT = {
   accountNumber: "0123456789",
   accountName: "Fannero Technologies Ltd",
 };
-
-const currencyFormatter = (currency: string) =>
-  new Intl.NumberFormat("en-NG", { style: "currency", currency, maximumFractionDigits: 0 });
 
 export default function BankTransferPage() {
   const router = useRouter();
@@ -85,12 +83,12 @@ export default function BankTransferPage() {
 
   if (lines.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-card-border p-12 text-center">
-        <p className="text-base text-slate-500">Your session has no tickets selected.</p>
-        <ButtonLink href={`/events/${event.id}/checkout/tickets`} variant="primary">
-          Start over
-        </ButtonLink>
-      </div>
+      <EmptyState
+        icon={<Ticket size={26} />}
+        title="No tickets in this session"
+        body="Start again and pick your tickets."
+        action={{ label: "Start over", href: `/events/${event.id}/checkout/tickets` }}
+      />
     );
   }
 
@@ -99,47 +97,53 @@ export default function BankTransferPage() {
   const seconds = String(secondsLeft % 60).padStart(2, "0");
 
   return (
-    <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-semibold text-text">{copy.title}</h1>
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
-        <div className="flex-1 rounded-2xl border border-card-border bg-white p-6">
-          <p className="text-sm text-slate-500">{copy.description}</p>
+    <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+      <div className="min-w-0 flex-1">
+        <Card>
+          <h2 className="text-title-lg">{copy.title}</h2>
+          <p className="mt-1 text-body-md text-muted-foreground">{copy.description}</p>
 
           {status === "awaiting_transfer" ? (
-            <div className="mt-6 flex flex-col gap-5">
-              <div className="flex flex-col gap-3 rounded-xl bg-lime-100/40 p-5">
+            <div className="mt-5 flex flex-col gap-4">
+              <div className="flex flex-col gap-2.5 rounded-md bg-accent p-4">
                 <Row label="Bank" value={MOCK_ACCOUNT.bankName} />
                 <Row label="Account number" value={MOCK_ACCOUNT.accountNumber} copyable onCopy={() => setCopied(true)} />
                 <Row label="Account name" value={MOCK_ACCOUNT.accountName} />
-                <Row label="Amount" value={currencyFormatter(currency).format(totals.total)} />
+                <Row label="Amount" value={money(totals.total)} />
                 <Row label="Reference (required)" value={orderReference} copyable onCopy={() => setCopied(true)} />
               </div>
-              {copied ? <p className="text-xs text-lime-500">Copied to clipboard.</p> : null}
-              <p className="flex items-center gap-2 text-sm text-slate-500">
-                <Icon name="clock" className="size-4" />
-                Complete your transfer within {minutes}:{seconds}
+              {copied ? (
+                <p className="text-body-md text-success">Copied to clipboard.</p>
+              ) : null}
+
+              <p className="flex items-center gap-2 text-body-md text-muted-foreground">
+                <Clock size={16} weight="bold" />
+                Complete your transfer within{" "}
+                <span className="font-mono tabular-nums">
+                  {minutes}:{seconds}
+                </span>
               </p>
-              <Button variant="accent" size="lg" className="rounded-full" onClick={confirmTransfer}>
+
+              <Button size="lg" block onClick={confirmTransfer}>
                 I&apos;ve made this transfer
               </Button>
             </div>
           ) : null}
 
           {status === "pending_confirmation" || status === "processing" ? (
-            <div className="mt-6 flex flex-col items-center gap-3 py-10 text-center">
-              <span className="size-10 animate-spin rounded-full border-4 border-lime-100 border-t-lime-500" />
-              <p className="text-sm text-slate-500">Hang tight, this only takes a moment.</p>
+            <div className="mt-5 flex flex-col items-center gap-3 py-10 text-center">
+              <span className="size-10 animate-spin rounded-full border-4 border-muted border-t-cta" />
+              <p className="text-body-md text-muted-foreground">
+                Hang tight, this only takes a moment.
+              </p>
             </div>
           ) : null}
 
           {status === "failed" ? (
-            <div className="mt-6 flex flex-col items-center gap-4 py-6 text-center">
-              <span className="flex size-12 items-center justify-center rounded-full bg-danger/10 text-danger">
-                <Icon name="alert-circle" className="size-6" />
-              </span>
-              <div className="flex gap-3">
+            <div className="mt-5 flex flex-col items-center gap-3 py-6 text-center">
+              <WarningCircle size={40} weight="fill" className="text-destructive" />
+              <div className="flex flex-wrap justify-center gap-3">
                 <Button
-                  variant="primary"
                   onClick={() => {
                     setSecondsLeft(TRANSFER_WINDOW_SECONDS);
                     setStatus((s) => transition(s, { type: "RETRY" }));
@@ -147,7 +151,11 @@ export default function BankTransferPage() {
                 >
                   Try again
                 </Button>
-                <ButtonLink href={`/events/${event.id}/checkout/pay/card`} variant="neutral">
+                <ButtonLink
+                  href={`/events/${event.id}/checkout/pay/card`}
+                  variant="outline"
+                  className="bg-card"
+                >
                   Pay by card instead
                 </ButtonLink>
               </div>
@@ -155,12 +163,9 @@ export default function BankTransferPage() {
           ) : null}
 
           {status === "expired" ? (
-            <div className="mt-6 flex flex-col items-center gap-4 py-6 text-center">
-              <span className="flex size-12 items-center justify-center rounded-full bg-warning/10 text-warning">
-                <Icon name="clock" className="size-6" />
-              </span>
+            <div className="mt-5 flex flex-col items-center gap-3 py-6 text-center">
+              <Clock size={40} weight="fill" className="text-warning" />
               <Button
-                variant="primary"
                 onClick={() => {
                   setSecondsLeft(TRANSFER_WINDOW_SECONDS);
                   setStatus((s) => transition(s, { type: "RETRY" }));
@@ -170,9 +175,10 @@ export default function BankTransferPage() {
               </Button>
             </div>
           ) : null}
-        </div>
-        <OrderSummary />
+        </Card>
       </div>
+
+      <OrderSummary />
     </div>
   );
 }
@@ -189,9 +195,9 @@ function Row({
   onCopy?: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 text-sm">
-      <span className="text-slate-500">{label}</span>
-      <span className="flex items-center gap-2 font-semibold text-text">
+    <div className="flex items-center justify-between gap-3 text-body-md">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="flex items-center gap-2 font-bold">
         {value}
         {copyable ? (
           <button
@@ -201,9 +207,9 @@ function Row({
               navigator.clipboard?.writeText(value);
               onCopy?.();
             }}
-            className="text-slate-400 hover:text-lime-500"
+            className="text-muted-foreground hover:text-link"
           >
-            <Icon name="copy" className="size-4" />
+            <Copy size={15} weight="bold" />
           </button>
         ) : null}
       </span>

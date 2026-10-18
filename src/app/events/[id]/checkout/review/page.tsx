@@ -1,24 +1,30 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button, ButtonLink } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
+import { Bank, Check, CreditCard, Ticket } from "@phosphor-icons/react/dist/ssr";
+import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
+import { Button, ButtonLink, Card, EmptyState } from "@/components/kit";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { useCheckout } from "@/lib/checkout/CheckoutContext";
 import type { PaymentMethodType } from "@/lib/types";
 
-const methods: { value: PaymentMethodType; label: string; description: string; icon: "wallet" | "credit-card" }[] = [
+const METHODS: {
+  value: PaymentMethodType;
+  label: string;
+  description: string;
+  icon: PhosphorIcon;
+}[] = [
   {
     value: "bank-transfer",
     label: "Bank transfer",
-    description: "Pay directly from your bank app. Confirmed within minutes.",
-    icon: "wallet",
+    description: "Pay from your bank app. Confirmed within minutes.",
+    icon: Bank,
   },
   {
     value: "card",
     label: "Debit or credit card",
-    description: "Visa, Mastercard, and Verve accepted.",
-    icon: "credit-card",
+    description: "Visa, Mastercard and Verve accepted.",
+    icon: CreditCard,
   },
 ];
 
@@ -28,95 +34,104 @@ export default function PaymentReviewPage() {
 
   if (lines.length === 0 || !buyer.email) {
     return (
-      <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-card-border p-12 text-center">
-        <p className="text-base text-slate-500">
-          Finish choosing your tickets and details before reviewing payment.
-        </p>
-        <ButtonLink href={`/events/${event.id}/checkout/tickets`} variant="primary">
-          Start over
-        </ButtonLink>
-      </div>
+      <EmptyState
+        icon={<Ticket size={26} />}
+        title="Nothing to review yet"
+        body="Choose your tickets and add your details first."
+        action={{ label: "Start over", href: `/events/${event.id}/checkout/tickets` }}
+      />
     );
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-semibold text-text">Review and choose how to pay</h1>
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
-        <div className="flex flex-1 flex-col gap-6">
-          <div className="rounded-2xl border border-card-border bg-white p-6">
-            <h2 className="text-lg font-semibold text-text">Contact details</h2>
-            <dl className="mt-3 flex flex-col gap-1 text-sm text-slate-500">
-              <div className="flex gap-2">
-                <dt className="font-medium text-text">Name:</dt>
-                <dd>{buyer.name}</dd>
-              </div>
-              <div className="flex gap-2">
-                <dt className="font-medium text-text">Email:</dt>
-                <dd>{buyer.email}</dd>
-              </div>
-              <div className="flex gap-2">
-                <dt className="font-medium text-text">Phone:</dt>
-                <dd>{buyer.phone}</dd>
-              </div>
-            </dl>
-          </div>
+    <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+      <div className="min-w-0 flex-1">
+        <Card className="mb-3">
+          <h2 className="text-title-md">Contact details</h2>
+          <dl className="mt-2 flex flex-col gap-1 text-body-md">
+            <div className="flex gap-2">
+              <dt className="text-muted-foreground">Name</dt>
+              <dd className="font-bold">{buyer.name}</dd>
+            </div>
+            <div className="flex gap-2">
+              <dt className="text-muted-foreground">Email</dt>
+              <dd className="font-bold">{buyer.email}</dd>
+            </div>
+            <div className="flex gap-2">
+              <dt className="text-muted-foreground">Phone</dt>
+              <dd className="font-bold">{buyer.phone}</dd>
+            </div>
+          </dl>
+        </Card>
 
-          <div className="rounded-2xl border border-card-border bg-white p-6">
-            <h2 className="text-lg font-semibold text-text">Payment method</h2>
-            <div className="mt-4 flex flex-col gap-3">
-              {methods.map((method) => {
-                const selected = paymentMethod === method.value;
-                return (
-                  <button
-                    key={method.value}
-                    type="button"
-                    onClick={() => setPaymentMethod(method.value)}
-                    aria-pressed={selected}
-                    className={`flex items-center gap-4 rounded-xl border p-4 text-left transition-colors ${
-                      selected ? "border-lime-500 bg-lime-100/40" : "border-card-border"
+        <Card>
+          <h2 className="text-title-md">How would you like to pay?</h2>
+
+          <div role="radiogroup" aria-label="Payment method" className="mt-3 flex flex-col gap-2">
+            {METHODS.map((method) => {
+              const selected = paymentMethod === method.value;
+              return (
+                <button
+                  key={method.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={selected}
+                  onClick={() => setPaymentMethod(method.value)}
+                  className={`flex items-center gap-3 rounded-md border p-3.5 text-left transition-colors ${
+                    selected ? "border-ring bg-accent" : "border-border hover:bg-accent"
+                  }`}
+                >
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-pill bg-secondary text-secondary-foreground">
+                    <method.icon size={20} weight="bold" />
+                  </span>
+
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-title-md">{method.label}</span>
+                    <span className="block text-body-md text-muted-foreground">
+                      {method.description}
+                    </span>
+                  </span>
+
+                  <span
+                    className={`flex size-5 shrink-0 items-center justify-center rounded-full border-2 ${
+                      selected ? "border-cta bg-cta" : "border-input"
                     }`}
                   >
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-lime-100 text-lime-500">
-                      <Icon name={method.icon} className="size-5" />
-                    </span>
-                    <span className="flex-1">
-                      <span className="block text-base font-medium text-text">{method.label}</span>
-                      <span className="block text-sm text-slate-500">{method.description}</span>
-                    </span>
-                    <span
-                      className={`flex size-5 items-center justify-center rounded-full border-2 ${
-                        selected ? "border-lime-500 bg-lime-500" : "border-card-border"
-                      }`}
-                    >
-                      {selected ? <Icon name="check" className="size-3 text-white" /> : null}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+                    {selected ? (
+                      <Check size={12} weight="bold" className="text-cta-foreground" />
+                    ) : null}
+                  </span>
+                </button>
+              );
+            })}
           </div>
+        </Card>
+
+        <div className="mt-4 flex gap-3">
+          <ButtonLink
+            href={`/events/${event.id}/checkout/details`}
+            variant="outline"
+            size="lg"
+            className="bg-card"
+          >
+            Back
+          </ButtonLink>
+          <Button
+            size="lg"
+            className="flex-1"
+            disabled={!paymentMethod}
+            onClick={() => {
+              if (!paymentMethod) return;
+              const path = paymentMethod === "bank-transfer" ? "bank-transfer" : "card";
+              router.push(`/events/${event.id}/checkout/pay/${path}`);
+            }}
+          >
+            Continue to pay
+          </Button>
         </div>
-        <OrderSummary />
       </div>
-      <div className="flex items-center justify-between">
-        <ButtonLink href={`/events/${event.id}/checkout/details`} variant="neutral">
-          Back
-        </ButtonLink>
-        <Button
-          variant="accent"
-          size="lg"
-          className="rounded-full"
-          disabled={!paymentMethod}
-          onClick={() => {
-            if (!paymentMethod) return;
-            const path = paymentMethod === "bank-transfer" ? "bank-transfer" : "card";
-            router.push(`/events/${event.id}/checkout/pay/${path}`);
-          }}
-        >
-          Continue to pay
-        </Button>
-      </div>
+
+      <OrderSummary />
     </div>
   );
 }
