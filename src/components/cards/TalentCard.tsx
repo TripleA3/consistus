@@ -1,6 +1,7 @@
 import { SealCheck, User as UserIcon } from "@phosphor-icons/react/dist/ssr";
 import { Card, CoverPlaceholder } from "@/components/kit";
 import { compact, money } from "@/lib/format";
+import { talentPhoto } from "@/lib/images";
 import type { TalentProfile, User } from "@/lib/types";
 
 const CATEGORY_LABELS: Record<TalentProfile["category"], string> = {
@@ -28,7 +29,12 @@ export function TalentCard({
 }) {
   return (
     <Card href={`/talent/${talent.id}`} flush className={className}>
-      <CoverPlaceholder seed={talent.id} className="aspect-square">
+      <CoverPlaceholder
+        src={talentPhoto(talent.id)}
+        alt=""
+        seed={talent.id}
+        className="aspect-square"
+      >
         <UserIcon size={34} />
       </CoverPlaceholder>
 

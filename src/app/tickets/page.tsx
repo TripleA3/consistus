@@ -10,6 +10,7 @@ import { CoverPlaceholder } from "@/components/kit";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { fetchOrdersForBuyer } from "@/lib/api/orders";
 import { dateTimeLabel, money } from "@/lib/format";
+import { eventPhoto } from "@/lib/images";
 import type { TicketOrderWithEvent } from "@/lib/types";
 
 export default function TicketsPage() {
@@ -64,7 +65,12 @@ function TicketsView() {
               <li key={order.id}>
                 <Card flush>
                   <div className="flex gap-3 p-3">
-                    <CoverPlaceholder seed={order.event.id} className="size-[84px] shrink-0 rounded-md">
+                    <CoverPlaceholder
+                      src={eventPhoto(order.event.id)}
+                      alt=""
+                      seed={order.event.id}
+                      className="size-[84px] shrink-0 rounded-md object-cover"
+                    >
                       <CalendarBlank size={22} />
                     </CoverPlaceholder>
 

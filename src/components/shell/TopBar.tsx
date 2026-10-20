@@ -61,19 +61,16 @@ export function TopBar({
           })}
         </nav>
 
-        <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+        <div className="ml-auto flex items-center gap-2">
+          {/* The design shows this as a plain 40px lime circle carrying the
+              level; the point total rides along for screen readers. */}
           <Link
             href="/rewards"
             data-pill
-            className="hidden items-center gap-2 rounded-pill bg-accent px-2.5 py-1.5 text-accent-foreground min-[900px]:flex"
+            aria-label={`Level ${level}, ${points.toLocaleString("en-US")} points`}
+            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-cta text-label-lg text-cta-foreground"
           >
-            <span className="flex size-6 items-center justify-center rounded-full bg-cta text-[11px] font-extrabold text-cta-foreground">
-              {level}
-            </span>
-            <span className="text-[13px] font-bold">
-              {points.toLocaleString("en-US")}
-              <span className="hidden min-[1180px]:inline"> points</span>
-            </span>
+            {level}
           </Link>
 
           {/* On phones the theme toggle lives in Account → Settings → Appearance. */}
@@ -84,13 +81,13 @@ export function TopBar({
           <Link
             href="/notifications"
             aria-label="Notifications"
-            className="relative flex size-10 items-center justify-center rounded-pill text-foreground hover:bg-accent"
+            className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-muted text-foreground hover:bg-accent"
           >
             <Bell size={21} weight="bold" />
             {unreadNotifications ? (
               <span
                 aria-label="unread"
-                className="absolute right-2 top-2 size-2 rounded-full bg-destructive"
+                className="absolute right-2.5 top-2.5 size-2 rounded-full bg-destructive"
               />
             ) : null}
           </Link>
@@ -101,10 +98,10 @@ export function TopBar({
               <img
                 src={avatarUrl}
                 alt={name}
-                className="size-9 rounded-full object-cover"
+                className="size-10 rounded-full object-cover"
               />
             ) : (
-              <span className="flex size-9 items-center justify-center rounded-full bg-secondary text-[13px] font-extrabold text-secondary-foreground">
+              <span className="flex size-10 items-center justify-center rounded-full bg-secondary text-[13px] font-extrabold text-secondary-foreground">
                 {name.charAt(0).toUpperCase()}
               </span>
             )}

@@ -1,6 +1,7 @@
 import { CalendarBlank, MapPin } from "@phosphor-icons/react/dist/ssr";
 import { Card, CoverPlaceholder, StatusPill } from "@/components/kit";
 import { dayLabel, money } from "@/lib/format";
+import { eventPhoto } from "@/lib/images";
 import type { EventItem } from "@/lib/types";
 
 /** The event tile used on Discover and across the events grid. */
@@ -12,7 +13,12 @@ export function EventCard({ event }: { event: EventItem }) {
   return (
     <Card href={`/events/${event.id}`} flush className="group">
       <div className="relative">
-        <CoverPlaceholder seed={event.id} className="aspect-[4/3]">
+        <CoverPlaceholder
+          src={eventPhoto(event.id)}
+          alt=""
+          seed={event.id}
+          className="aspect-[4/3]"
+        >
           <CalendarBlank size={30} />
         </CoverPlaceholder>
         <StatusPill tone="neutral" className="absolute left-2.5 top-2.5 bg-card/90">

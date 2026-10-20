@@ -18,6 +18,7 @@ import { EventCard } from "@/components/cards/EventCard";
 import { ContactOrganizerForm } from "@/components/events/ContactOrganizerForm";
 import { fetchEventById, fetchEvents } from "@/lib/api/events";
 import { compact, dateTimeLabel, money } from "@/lib/format";
+import { eventPhoto } from "@/lib/images";
 
 export default async function EventDetailsPage({ params }: PageProps<"/events/[id]">) {
   const { id } = await params;
@@ -40,7 +41,12 @@ export default async function EventDetailsPage({ params }: PageProps<"/events/[i
     <AppShell>
       <PageHeader title={event.title} back="/events" />
 
-      <CoverPlaceholder seed={event.id} className="mb-5 aspect-[16/9] rounded-xl sm:aspect-[21/9]">
+      <CoverPlaceholder
+        src={eventPhoto(event.id)}
+        alt={event.title}
+        seed={event.id}
+        className="mb-5 aspect-[16/9] rounded-xl object-cover sm:aspect-[21/9]"
+      >
         <CalendarBlank size={44} />
       </CoverPlaceholder>
 

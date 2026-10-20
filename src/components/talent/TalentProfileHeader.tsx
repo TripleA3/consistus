@@ -5,6 +5,7 @@ import { SealCheck, User as UserIcon } from "@phosphor-icons/react/dist/ssr";
 import { Button, ButtonLink, Card, CoverPlaceholder } from "@/components/kit";
 import { FavoriteButton } from "@/components/favorites/FavoriteButton";
 import { compact, money } from "@/lib/format";
+import { talentPhoto } from "@/lib/images";
 import type { TalentProfile, User } from "@/lib/types";
 
 const CATEGORY_LABEL: Record<TalentProfile["category"], string> = {
@@ -27,7 +28,12 @@ export function TalentProfileHeader({
 
   return (
     <Card flush className="mb-[var(--section-gap)]">
-      <CoverPlaceholder seed={talent.id} className="aspect-[3/1]" />
+      <CoverPlaceholder
+        src={talentPhoto(talent.id)}
+        alt=""
+        seed={talent.id}
+        className="aspect-[3/1]"
+      />
 
       <div className="p-4">
         <div className="flex items-start justify-between gap-3">

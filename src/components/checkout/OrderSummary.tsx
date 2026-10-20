@@ -2,13 +2,19 @@ import { CalendarBlank } from "@phosphor-icons/react/dist/ssr";
 import { Card, CoverPlaceholder } from "@/components/kit";
 import { useCheckout } from "@/lib/checkout/CheckoutContext";
 import { money } from "@/lib/format";
+import { eventPhoto } from "@/lib/images";
 
 export function OrderSummary() {
   const { event, lines, totals } = useCheckout();
 
   return (
     <Card flush className="w-full lg:sticky lg:top-20 lg:w-[300px] lg:shrink-0">
-      <CoverPlaceholder seed={event.id} className="aspect-[16/7]">
+      <CoverPlaceholder
+        src={eventPhoto(event.id)}
+        alt=""
+        seed={event.id}
+        className="aspect-[16/7]"
+      >
         <CalendarBlank size={26} />
       </CoverPlaceholder>
 
