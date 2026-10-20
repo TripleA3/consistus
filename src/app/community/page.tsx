@@ -57,7 +57,7 @@ export default async function CommunityPage() {
   return (
     <AppShell>
       {/* The one full-bleed indigo block on the fan side. */}
-      <section className="mb-[var(--section-gap)] rounded-xl bg-primary px-6 py-12 text-center text-primary-foreground sm:px-12">
+      <section className="mb-[var(--section-gap)] rounded-xl bg-surface-brand px-6 py-12 text-center text-on-brand sm:px-12">
         <p className="text-label-md uppercase tracking-wide opacity-70">The Fannero community</p>
         <h1 className="mx-auto mt-2 max-w-2xl text-headline-lg">
           Where fans and the people they follow{" "}

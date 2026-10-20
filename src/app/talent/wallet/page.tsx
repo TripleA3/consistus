@@ -59,7 +59,7 @@ function WalletView() {
 
       {/* Balance: indigo block, Withdraw sitting to the right rather than
           filling the width, per the design file. */}
-      <div className="mb-4 flex items-center justify-between gap-4 rounded-xl bg-primary p-6 text-primary-foreground">
+      <div className="mb-4 flex items-center justify-between gap-4 rounded-xl bg-surface-brand p-6 text-on-brand">
         <div className="min-w-0">
           <p className="text-body-md opacity-70">Available balance</p>
           <p data-count className="mt-0.5 text-display-sm tabular-nums">
