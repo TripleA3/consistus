@@ -14,7 +14,7 @@ export function EventCard({ event }: { event: EventItem }) {
     <Card href={`/events/${event.id}`} flush className="group">
       <div className="relative">
         <CoverPlaceholder
-          src={eventPhoto(event.id)}
+          src={eventPhoto(event.id, event.title)}
           alt=""
           seed={event.id}
           className="aspect-[4/3]"

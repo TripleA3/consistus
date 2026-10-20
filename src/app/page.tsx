@@ -1,35 +1,16 @@
-import { CalendarBlank, Sparkle, VideoCamera } from "@phosphor-icons/react/dist/ssr";
-import {
-  ButtonLink,
-  Chip,
-  ChipRow,
-  EmptyState,
-  PageHeader,
-  Section,
-} from "@/components/kit";
+import { CalendarBlank, Sparkle } from "@phosphor-icons/react/dist/ssr";
+import { Chip, ChipRow, EmptyState, Section } from "@/components/kit";
 import { AppShell } from "@/components/shell/AppShell";
+import { HeroPanel } from "@/components/home/HeroPanel";
+import { LiveTicker } from "@/components/home/LiveTicker";
+import { LevelCard } from "@/components/home/LevelCard";
+import { CelebrityCard } from "@/components/cards/CelebrityCard";
 import { EventCard } from "@/components/cards/EventCard";
-import { TalentCard } from "@/components/cards/TalentCard";
 import { fetchEvents } from "@/lib/api/events";
 import { fetchTalentUsers } from "@/lib/api/talents";
 
-const TALENT_CATEGORIES = [
-  { value: "all", label: "All" },
-  { value: "artist", label: "Artists" },
-  { value: "actor", label: "Actors" },
-  { value: "comedian", label: "Comedians" },
-  { value: "techie", label: "Techies" },
-  { value: "athlete", label: "Athletes" },
-];
-
-const EVENT_CATEGORIES = [
-  { value: "all", label: "All events" },
-  { value: "concerts", label: "Concerts" },
-  { value: "nightlife", label: "Nightlife" },
-  { value: "tech-and-gaming", label: "Tech & gaming" },
-  { value: "food-and-drinks", label: "Food & drinks" },
-  { value: "networking", label: "Networking" },
-];
+/** The filter row beside "Top celebrities", per the design. */
+const CELEB_FILTERS = ["All", "Music", "Comedy", "Film & TV", "Sports"];
 
 /**
  * Rendered per request, not baked at build time: the home page lists live
@@ -44,25 +25,27 @@ export default async function HomePage() {
   const talents = talentUsers.filter((talent) => talent.talentProfile);
 
   return (
-    <AppShell>
-      <PageHeader
-        title="Find your"
-        accent="people"
-        subtitle="Book a shoutout, grab a ticket, show up."
-      />
+    <AppShell level={12} points={660} unreadNotifications name="Ada Okafor">
+      <HeroPanel name="Ada Okafor" />
+      <LiveTicker />
+
+      {/* XP, level and streak aren't on the user record yet — the figures
+          below are the design's, and move onto the model with Prisma. */}
+      <LevelCard level={12} title="Superfan" xpIntoLevel={340} xpForLevel={1000} streakDays={6} />
 
       <Section
         title="Top celebrities"
-        subtitle="Book a video or an appearance"
+        subtitle="Request a personal video or book them for your event."
+        aside={
+          <ChipRow label="Filter celebrities by category" className="hidden sm:flex">
+            {CELEB_FILTERS.map((label, index) => (
+              <Chip key={label} selected={index === 0}>
+                {label}
+              </Chip>
+            ))}
+          </ChipRow>
+        }
       >
-        <ChipRow label="Filter talent by category" className="mb-3.5">
-          {TALENT_CATEGORIES.map((category, index) => (
-            <Chip key={category.value} selected={index === 0}>
-              {category.label}
-            </Chip>
-          ))}
-        </ChipRow>
-
         {talents.length === 0 ? (
           <EmptyState
             icon={<Sparkle size={26} />}
@@ -70,10 +53,9 @@ export default async function HomePage() {
             body="Celebrities you can book will show up here."
           />
         ) : (
-          // -gutter margins let the rail run to the screen edge on a phone.
-          <div className="-mx-[var(--gutter)] flex gap-3 overflow-x-auto px-[var(--gutter)] pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="grid grid-cols-2 gap-4 min-[700px]:grid-cols-4">
             {talents.map((talent) => (
-              <TalentCard key={talent.id} talent={talent} profile={talent.talentProfile!} />
+              <CelebrityCard key={talent.id} talent={talent} profile={talent.talentProfile!} />
             ))}
           </div>
         )}
@@ -84,14 +66,6 @@ export default async function HomePage() {
         subtitle="Events happening near you"
         action={{ label: "See all", href: "/events" }}
       >
-        <ChipRow label="Filter events by category" className="mb-3.5">
-          {EVENT_CATEGORIES.map((category, index) => (
-            <Chip key={category.value} selected={index === 0}>
-              {category.label}
-            </Chip>
-          ))}
-        </ChipRow>
-
         {events.length === 0 ? (
           <EmptyState
             icon={<CalendarBlank size={26} />}
@@ -102,31 +76,6 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {events.map((event) => (
               <EventCard key={event.id} event={event} />
-            ))}
-          </div>
-        )}
-      </Section>
-
-      <Section title="Request a video" subtitle="A personal message, from them to you">
-        {talents.length === 0 ? (
-          <EmptyState
-            icon={<VideoCamera size={26} />}
-            title="Nobody taking requests yet"
-            body="Personalised videos open up as talent join."
-          />
-        ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {talents.slice(0, 8).map((talent) => (
-              <ButtonLink
-                key={talent.id}
-                href={`/talent/${talent.id}/request/video`}
-                variant="outline"
-                size="lg"
-                className="justify-between bg-card px-4"
-                trailing={<VideoCamera size={18} weight="bold" />}
-              >
-                <span className="truncate">{talent.name}</span>
-              </ButtonLink>
             ))}
           </div>
         )}

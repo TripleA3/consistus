@@ -46,7 +46,7 @@
      --primary, which inverts to a light step on dark so that primary text
      and buttons stay legible. A large filled block needs the former. */
   --color-surface-brand: var(--surface-brand);
-  --color-text-on-brand: var(--text-on-brand);
+  --color-on-brand: var(--text-on-brand);
 
   /* States. The -soft tints are backgrounds; the solid role is the label. */
   --color-destructive: var(--destructive);

@@ -387,9 +387,11 @@ function setupMarquee({ reduced }: Flags) {
   for (const track of tracks) {
     if (!(track instanceof HTMLElement)) continue;
     // The track holds its content twice, so -50% lands seamlessly back at 0.
-    // A <Marquee> component should render the duplicate itself; this is the
-    // fallback for plain markup.
-    if (track.childElementCount && !doubled.has(track)) {
+    // A component that renders its own duplicate says so with
+    // data-marquee-prefilled: cloning into a React-owned subtree before it
+    // hydrates adds children React didn't render, and hydration fails.
+    const prefilled = track.hasAttribute("data-marquee-prefilled");
+    if (!prefilled && track.childElementCount && !doubled.has(track)) {
       doubled.add(track);
       track.innerHTML += track.innerHTML;
     }

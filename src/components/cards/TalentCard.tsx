@@ -30,7 +30,7 @@ export function TalentCard({
   return (
     <Card href={`/talent/${talent.id}`} flush className={className}>
       <CoverPlaceholder
-        src={talentPhoto(talent.id)}
+        src={talentPhoto(talent.id, talent.name)}
         alt=""
         seed={talent.id}
         className="aspect-square"

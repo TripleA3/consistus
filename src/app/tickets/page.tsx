@@ -66,7 +66,7 @@ function TicketsView() {
                 <Card flush>
                   <div className="flex gap-3 p-3">
                     <CoverPlaceholder
-                      src={eventPhoto(order.event.id)}
+                      src={eventPhoto(order.event.id, order.event.title)}
                       alt=""
                       seed={order.event.id}
                       className="size-[84px] shrink-0 rounded-md object-cover"

@@ -10,7 +10,7 @@ export function OrderSummary() {
   return (
     <Card flush className="w-full lg:sticky lg:top-20 lg:w-[300px] lg:shrink-0">
       <CoverPlaceholder
-        src={eventPhoto(event.id)}
+        src={eventPhoto(event.id, event.title)}
         alt=""
         seed={event.id}
         className="aspect-[16/7]"

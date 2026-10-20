@@ -42,7 +42,7 @@ export default async function EventDetailsPage({ params }: PageProps<"/events/[i
       <PageHeader title={event.title} back="/events" />
 
       <CoverPlaceholder
-        src={eventPhoto(event.id)}
+        src={eventPhoto(event.id, event.title)}
         alt={event.title}
         seed={event.id}
         className="mb-5 aspect-[16/9] rounded-xl object-cover sm:aspect-[21/9]"

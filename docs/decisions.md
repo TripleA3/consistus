@@ -470,3 +470,43 @@ since they differ in only a few characters.
 It also takes a `src`. The moment real artwork exists — files in `public/`
 or a URL on the record — passing it renders the image and nothing else
 about the layout moves.
+
+## Home comes from the design bundle, not a guess
+
+`Fanero_Home.html` is another bundler splash page, and decoding its
+manifest gave 60 entries — among them **30 photographs named for what
+they show**: eight celebrities, fourteen events and four communities.
+Those are now in `public/images`, and `src/lib/images.ts` prefers a file
+whose slug matches the record's title ("Afro Night Live" →
+`event-afro-night-live.jpg`), falling back to a stable pick from the same
+pool. So the catalogue's own artwork appears the moment its titles match
+the design's.
+
+Its template also carries the design's sample catalogue as plain arrays —
+six celebrities with categories and rates, seven events with venue, date
+and price, the ticker copy, community posts. The ticker on the home page
+is that copy verbatim.
+
+The home screen itself is rebuilt to the design: the indigo hero with the
+greeting rule, the headline and its one serif accent, the search pill with
+the lime Search button inside it and the quick filters; the scrolling
+ticker; the level, XP and streak strip; and the Top celebrities grid whose
+tiles are portraits with a category badge and the name and rate beneath,
+rather than cards.
+
+Three fixes fell out of building it:
+
+- `--color-text-on-brand` produced the class `text-text-on-brand`, so the
+  `text-on-brand` the screens used resolved to nothing and hero copy
+  inherited dark ink on an indigo block. The token is `--color-on-brand`.
+- The marquee broke hydration. The motion layer doubles a track's content
+  by cloning, and cloning into a React-owned subtree before it hydrates
+  adds children React never rendered. `LiveTicker` renders both halves
+  itself and marks the track `data-marquee-prefilled`, which the motion
+  layer now honours.
+- The photo panel waited for `lg`, but the design shows it at 880px.
+
+Still outstanding: the seed holds the older demo catalogue, and it bails
+as soon as it finds a user, so an existing database keeps its content.
+Matching the design's catalogue exactly means reseeding, which would mean
+clearing the deployed data — not something to do unasked.

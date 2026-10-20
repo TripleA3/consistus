@@ -29,7 +29,7 @@ export function TalentProfileHeader({
   return (
     <Card flush className="mb-[var(--section-gap)]">
       <CoverPlaceholder
-        src={talentPhoto(talent.id)}
+        src={talentPhoto(talent.id, talent.name)}
         alt=""
         seed={talent.id}
         className="aspect-[3/1]"

@@ -1,27 +1,43 @@
 /**
- * The photography that came with the design bundle, unpacked from its
- * manifest into public/images. There's no mapping from a seeded record to
- * a particular shot, so each entity is assigned one deterministically —
- * the same id always gets the same photo, on the server and the client.
- *
- * Replace these arrays (or set a real URL on the record) as soon as the
- * catalogue carries its own artwork; nothing else has to change.
+ * The photography that shipped with the design bundles, unpacked from
+ * their manifests into public/images. Files are named for what they show
+ * ("event-afro-night-live", "celeb-nia-kalu"), so a record whose title
+ * matches gets its own picture; anything else falls back to a stable
+ * choice from the same set.
  */
 const TALENT = [
-  "/images/talent/celeb-bisi-adeyemi.jpg",
-  "/images/talent/celeb-chioma-eze.jpg",
-  "/images/talent/celeb-nia-kalu.jpg",
-  "/images/talent/celeb-tunde-ade.jpg",
-  "/images/talent/celeb-zara-bello.jpg",
+  "celeb-dj-remi",
+  "celeb-femi-ojo",
+  "celeb-imani-cole",
+  "celeb-kola-martins",
+  "celeb-lola-ige",
+  "celeb-nia-kalu",
+  "celeb-tunde-ade",
+  "celeb-zara-bello",
 ];
 
 const EVENTS = [
-  "/images/events/s1387174.jpg",
-  "/images/events/s9002827.jpg",
-  "/images/events/s10063045.jpg",
-  "/images/events/s15286980.jpg",
-  "/images/events/s28251081.jpg",
-  "/images/events/s34779355.jpg",
+  "event-afro-night-live",
+  "event-afrobeats-london",
+  "event-creator-bootcamp",
+  "event-detty-december-kickoff",
+  "event-founders-mixer",
+  "event-gaming-arena-live",
+  "event-lagos-food-festival",
+  "event-lagos-tech-fest",
+  "event-laugh-out-abuja",
+  "event-naija-night-houston",
+  "event-owambe-sunday",
+  "event-quilox-saturdays",
+  "event-wine-paint-night",
+  "event-women-in-business-brunch",
+];
+
+const COMMUNITY = [
+  "community-comedy-lovers-ng",
+  "community-nollywood-insiders",
+  "community-super-falcons-fans",
+  "community-tems-fan-club",
 ];
 
 /** FNV-1a: ids differ in only a few characters, so avalanche matters. */
@@ -34,10 +50,33 @@ function hash(seed: string) {
   return h >>> 0;
 }
 
-export function talentPhoto(id: string) {
-  return TALENT[hash(id) % TALENT.length];
+function slug(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
-export function eventPhoto(id: string) {
-  return EVENTS[hash(id) % EVENTS.length];
+/**
+ * Prefers a file named for the record, then falls back to a stable pick.
+ * `name` is the title or person's name; `id` only has to be stable.
+ */
+function pick(dir: string, pool: string[], prefix: string, id: string, name?: string) {
+  if (name) {
+    const wanted = `${prefix}-${slug(name)}`;
+    if (pool.includes(wanted)) return `/images/${dir}/${wanted}.jpg`;
+  }
+  return `/images/${dir}/${pool[hash(id) % pool.length]}.jpg`;
+}
+
+export function talentPhoto(id: string, name?: string) {
+  return pick("talent", TALENT, "celeb", id, name);
+}
+
+export function eventPhoto(id: string, title?: string) {
+  return pick("events", EVENTS, "event", id, title);
+}
+
+export function communityPhoto(id: string, name?: string) {
+  return pick("community", COMMUNITY, "community", id, name);
 }
